@@ -19,3 +19,4 @@ JT Link
 
 new Date().toLocaleString();
 web services: codeignito, laravel
+python setup.py py2exe
