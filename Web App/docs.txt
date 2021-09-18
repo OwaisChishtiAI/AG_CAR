@@ -1,0 +1,21 @@
+Timestamp
+Agent Name
+Order ID
+Client Name
+Contact
+Email-ID
+Total Tariff
+Deposit
+Profit
+Driver Pay
+Payment Method
+Pickup Date
+umber of Vehicle
+Pickup
+Booking Status
+Agreement
+Agent Notes
+JT Link
+
+new Date().toLocaleString();
+web services: codeignito, laravel
