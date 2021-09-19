@@ -17,6 +17,13 @@ def read_fn():
     data = read_db()
     return jsonify(data)
 
+@app.route("/update", methods=['POST'])
+def update_fn():
+    data = request.form.to_dict()
+    print("EDIT #####################################", data)
+    update_db(data)
+    return jsonify(data)
+
 class Connect:
     def __init__(self):
         mydb = mysql.connector.connect(
@@ -65,7 +72,28 @@ def insert_db(data):
 
     db.commit()
 
+
+def update_db(data):
+    keys = ""
+    vals = []
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    keys = keys[:-2]
+    vals = tuple(vals)
+    sql = "UPDATE emp_sales SET "
+    for i in range(len(data.values())-1):
+        if not list(data.keys())[i] == "order_id":
+            sql = sql + "{0} = '{1}', ".format(list(data.keys())[i], list(data.values())[i])
+    sql = sql[:-2] + " "
+    sql = sql + "WHERE {0} = '{1}'".format("order_id", data['order_id'])
+    print(sql)
+    # print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+
 if __name__ == "__main__":
     connect = Connect()
     app.run(debug=True)
-    # read_db()

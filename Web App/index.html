@@ -952,7 +952,7 @@
                                         // alert(formData.get('sales'));
                                         xhr = new XMLHttpRequest();
 
-                                        xhr.open( 'POST', 'http://b6c7-111-88-230-12.ngrok.io/write', true );
+                                        xhr.open( 'POST', 'http://4755-111-88-230-12.ngrok.io/write', true );
                                         xhr.onreadystatechange = function ( response ) {};
                                         xhr.send( formData );
 
@@ -1016,20 +1016,24 @@
                                             console.log("Data Fetched");
                                             var results = xhr.response;  
                                             results = JSON.parse(results);
+                                            console.log("RESULTS: ", results);
 
                                             function addCell(tr, text, last=false, btn_id=null) {
-                                                function tdonClick(event){
+                                                function ViewClick(event){
                                                 console.log(event.target.id + ' was clicked'); //modal_timestamp
                                                 // factionName = results[event.target.id-1]['timestamp'];
                                                 // console.log(factionName);
                                                 // document.getElementById('modal_timestamp').innerHTML = factionName;
-                                                var orig_keys = ['Timestamp', 'Agent Name', 'Order ID', 'Client Name', 'Contact', 'Email-ID', 'Total Tarrif',
-                                                'Deposit', 'Profit', 'Driver Pay', 'Payment Method', 'Pickup Date', 'Number of Vehicles', 'Pickup', 'Booking Status',
-                                                'Agreement', 'Agent Notes', 'JT Link']
-                                                var orig_keys_ite = 0
+                                                var orig_keys = {"modal_timestamp":"Timestamp", "modal_agent_name":"Agent Name", "modal_order_id":"Order ID", "modal_client_name":"Client Name", "modal_contact":"Contact", "modal_email_id":"Email-ID", "modal_total_tariff":"Total Tarrif", "modal_deposit":"Deposit", "modal_profit":"Profit", "modal_driver_pay":"Driver Pay", "modal_payment_method":"Payment Method", "modal_pickup_date":"Pickup Date", "modal_no_of_vehicles":"Number of Vehicles", "modal_pickup":"Pickup", "modal_booking_status":"Booking Status", "modal_agreement":"Agreement", "modal_agent_notes":"Agent Notes", "modal_jt_link":"JT Link", }
                                                 Object.keys(results[event.target.id - 1]).forEach(function(key) {
-                                                    document.getElementById('modal_' + key).innerHTML = orig_keys[orig_keys_ite].bold() + ": " + results[event.target.id - 1][key];
-                                                    orig_keys_ite++;
+                                                    document.getElementById('modal_' + key).innerHTML = orig_keys['modal_' + key].bold() + ": " + results[event.target.id - 1][key];
+                                                    })
+                                                }
+
+                                                function EditClick(event){
+                                                console.log(event.target.id + ' was clicked'); //modal_timestamp
+                                                Object.keys(results[event.target.id - 1]).forEach(function(key) {
+                                                    document.getElementById('emodal_' + key).value = results[event.target.id - 1][key];
                                                     })
                                                 }
 
@@ -1045,13 +1049,16 @@
                                                     btn.value = "View";
                                                     btn.dataset.target = "#exampleModalLong";
                                                     btn.dataset.toggle = "modal";
-                                                    btn.onclick = tdonClick;
+                                                    btn.onclick = ViewClick;
                                                     td.appendChild(btn);
 
                                                     btn2.type = "button";
+                                                    btn2.id = btn_id
                                                     btn2.className = "mb-2 mr-2 btn-transition btn btn-outline-warning";
                                                     btn2.value = "Edit";
-                                                    // btn.onclick = (function(entry) {return function() {chooseUser(entry);}})(entry);
+                                                    btn2.dataset.target = "#editmodal";
+                                                    btn2.dataset.toggle = "modal";
+                                                    btn2.onclick = EditClick;
                                                     td.appendChild(btn2);
 
                                                     btn3.type = "button";
@@ -1071,6 +1078,12 @@
                                             }  
 
                                             var i = 1;
+                                            var Table = document.getElementById("populateTable");
+                                            Table.innerHTML = "<thead><tr><th>#</th><th>Timestamp</th><th>Agent Name</th><th>Order ID</th><th>Actions</th></tr></thead>";
+                                            // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
+                                            // for(var a = 0; a < 4; a++){
+
+                                            // }
                                             for(var j = 0; j < results.length; j++){
                                                 var row = table.insertRow();
                                                 var item = results[j];
@@ -1085,7 +1098,7 @@
                                         }
                                     }
                                     
-                                    xhr.open('GET', "http://44ce-111-88-230-12.ngrok.io/read", true);
+                                    xhr.open('GET', "http://4755-111-88-230-12.ngrok.io/read", true);
                                     xhr.send('');
                                     // console.log(results);                                    
                                 }
@@ -1209,13 +1222,14 @@
         </div>
     </div>
 <script type="text/javascript" src="./assets/scripts/main.js"></script></body>
-</html>
 
+</html>
+<!-- VIEW MODAL START -->
 <div id="exampleModalLong" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <h5 class="modal-title" id="modal_order_id"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -1247,3 +1261,190 @@
         </div>
     </div>
 </div>
+<!-- VIEW MODAL END -->
+
+<!-- EDIT MODAL START -->
+
+<div id="editmodal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <script>
+                function update_changes(){
+                    var data = document.getElementById("form-2");
+                    var formData = new FormData();
+                    var names = ['timestamp', 'agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'total_tariff', 'deposit', 'profit', 'driver_pay', 'payment_method', 'pickup_date', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link']
+                    // alert(data['agent_name'].value);
+                    for(var b=0;b<names.length;b++){
+                        formData.append(names[b], data[names[b]].value)
+                    }
+                    xhr = new XMLHttpRequest();
+            
+                    xhr.open( 'POST', 'http://4755-111-88-230-12.ngrok.io/update', true );
+                    xhr.onreadystatechange = function ( response ) {};
+                    xhr.send( formData );
+                }
+            </script>
+
+            <div class="modal-body">
+                <form id="form-2" class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Timestamp</label>
+                            <input type="text" name="timestamp" class="form-control" id="emodal_timestamp" placeholder="Timestamp" value="" required>
+                            <script>
+                                var datetime = new Date().toLocaleString();
+                                document.getElementById("timestamp").value = datetime;
+                            </script>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Agent Name</label>
+                            <input type="text" name="agent_name" class="form-control" id="emodal_agent_name" placeholder="Agent Name" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Order ID</label>
+                            <input type="text" name="order_id" class="form-control" id="emodal_order_id" placeholder="Order ID" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Client Name</label>
+                            <input type="text" name="client_name" class="form-control" id="emodal_client_name" placeholder="Client Name" value=""required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Contact</label>
+                            <input type="text" name="contact" class="form-control" id="emodal_contact" placeholder="Contact" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Email-ID</label>
+                            <input type="text" name="email_id" class="form-control" id="emodal_email_id" placeholder="Email-ID" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Total Tariff</label>
+                            <input type="text" name="total_tariff" class="form-control" id="emodal_total_tariff" placeholder="Total Tariff" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Deposit</label>
+                            <input type="text" name="deposit" class="form-control" id="emodal_deposit" placeholder="Deposit" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Profit</label>
+                            <input type="text" name="profit" class="form-control" id="emodal_profit" placeholder="Profit" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Driver Pay</label>
+                            <input type="text" name="driver_pay" class="form-control" id="emodal_driver_pay" placeholder="Driver Pay" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Payment Method</label>
+                            <input type="text" name="payment_method" class="form-control" id="emodal_payment_method" placeholder="Payment Method" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Pickup Date</label>
+                            <input type="text" name="pickup_date" class="form-control" id="emodal_pickup_date" placeholder="Pickup Date" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Number of Vehicle</label>
+                            <input type="text" name="no_of_vehicles" class="form-control" id="emodal_no_of_vehicles" placeholder="Number of Vehicle" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Pickup</label>
+                            <input type="text" name="pickup" class="form-control" id="emodal_pickup" placeholder="Pickup" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Booking Status</label>
+                            <input type="text" name="booking_status" class="form-control" id="emodal_booking_status" placeholder="Booking Status" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">Agreement</label>
+                            <input type="text" name="agreement" class="form-control" id="emodal_agreement" placeholder="Agreement" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Agent Notes</label>
+                            <input type="text" name="agent_notes" class="form-control" id="emodal_agent_notes" placeholder="Agent Notes" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">JT Link</label>
+                            <input type="text" name="jt_link" class="form-control" id="emodal_jt_link" placeholder="JT Link" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="update_changes()" class="btn btn-primary" type="submit">Save Changes</button>
+                </form>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- EDIT MODAL END -->

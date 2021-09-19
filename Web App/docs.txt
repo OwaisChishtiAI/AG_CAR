@@ -20,3 +20,22 @@ JT Link
 new Date().toLocaleString();
 web services: codeignito, laravel
 python setup.py py2exe
+
+agent_name: "q"
+agent_notes: "q"
+agreement: "q"
+booking_status: "q"
+client_name: "q"
+contact: "q"
+deposit: "q"
+driver_pay: "q"
+email_id: "q"
+jt_link: "q"
+no_of_vehicles: "q"
+order_id: "q"
+payment_method: "q"
+pickup: "q"
+pickup_date: "q"
+profit: "q"
+timestamp: "9/18/2021, 3:54:02 PM"
+total_tariff: "q"
