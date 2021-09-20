@@ -17,6 +17,13 @@ def read_fn():
     data = read_db()
     return jsonify(data)
 
+@app.route("/delete", methods=['POST'])
+def delete_fn():
+    order_id = request.form.to_dict()['order_id']
+    print(type(order_id), len(order_id), order_id)
+    delete_db(order_id)
+    return jsonify({"OK" : "200"})
+
 @app.route("/update", methods=['POST'])
 def update_fn():
     data = request.form.to_dict()
@@ -72,6 +79,12 @@ def insert_db(data):
 
     db.commit()
 
+def delete_db(order_id):
+    sql = "DELETE FROM emp_sales WHERE order_id = '{}'".format(order_id)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
 
 def update_db(data):
     keys = ""

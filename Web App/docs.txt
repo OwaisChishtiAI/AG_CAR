@@ -39,3 +39,13 @@ pickup_date: "q"
 profit: "q"
 timestamp: "9/18/2021, 3:54:02 PM"
 total_tariff: "q"
+
+
+TODOS:
+1) bold form fields
+3) logo
+4) emp clock
+5) salary panel
+6) date search for sales records
+7) login form
+8) reference to IP
