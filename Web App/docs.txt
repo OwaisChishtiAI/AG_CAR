@@ -47,5 +47,3 @@ TODOS:
 4) emp clock
 5) salary panel
 6) date search for sales records
-7) login form
-8) reference to IP

@@ -1,6 +1,7 @@
 import mysql.connector
 from flask import Flask, json, jsonify, request
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -12,9 +13,27 @@ def write_fn():
     insert_db(data)
     return "0"
 
-@app.route("/read", methods=['GET'])
+@app.route("/read", methods=['POST'])
 def read_fn():
-    data = read_db()
+    data = request.form.to_dict()
+    from_date = data.get('from_date')
+    to_date = data.get('to_date')
+    if from_date:
+        if to_date:
+            print("Dates Provided")
+            data = read_db_by_date(from_date, to_date)
+    else:
+        print("Dates NOT Provided")
+        data = read_db()
+    print(len(data))
+    return jsonify(data)
+
+@app.route("/read_by_date", methods=['POST'])
+def read_by_date_fn():
+    data = request.form.to_dict()
+    from_date = data['from_date']
+    to_date = data['to_date']
+    data = read_db_by_date(from_date, to_date)
     return jsonify(data)
 
 @app.route("/delete", methods=['POST'])
@@ -35,8 +54,9 @@ def update_fn():
 def login_fn():
     data = request.form.to_dict()
     print("LOGIN #####################################", data)
-    login(data)
-    return jsonify({'status' : 'unk'}) # status : admin, emp, unk
+    admin = login(data)
+    print("ADMIN: ", admin)
+    return jsonify({'status' : admin}) # status : admin, emp, unk
 
 class Connect:
     def __init__(self):
@@ -71,6 +91,23 @@ def read_db():
         data.append(json_data)
     return data
 
+def read_db_by_date(from_date, to_date):
+    cursor = connect.pointer()[0]
+    sql = "SELECT * FROM emp_sales WHERE timestamp BETWEEN '{0}' AND '{1}'".format(from_date, to_date)
+    cursor.execute(sql)
+    myresult = cursor.fetchall()
+    data = []
+    keys = connect.fields()
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        each.pop(0)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    return data
+    
+
 def login(data):
     cursor = connect.pointer()[0]
     sql = "SELECT admin_status FROM login WHERE username = '{0}' AND password = '{1}'".format(data['username'], data['password'])
@@ -79,13 +116,18 @@ def login(data):
     admin = cursor.fetchall()
     if admin:
         admin = admin[0][0]
+        if admin:
+            admin = 'admin'
+        else:
+            admin = 'emp'
     else:
-        admin = None
-    print("ADMIN #######", admin)
+        admin = 'null'
+    return admin
 
 def insert_db(data):
     keys = ""
     vals = []
+    data['timestamp'] = datetime.strptime(data['timestamp'], '%m/%d/%Y, %H:%M:%S %p')
     for key, val in data.items():
         keys = keys + key + ", "
         vals.append(val)
@@ -128,3 +170,4 @@ def update_db(data):
 if __name__ == "__main__":
     connect = Connect()
     app.run(debug=True)
+    # read_db_by_date()

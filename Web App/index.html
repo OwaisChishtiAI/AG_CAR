@@ -8,12 +8,12 @@
             <div class="loginbox">
                 <img src="assets/images/avatar.png" class="avatar">
                 <h1>Login Here</h1>
-                <form name="creds" onsubmit="return validateForm()" method="POST" action="main_dashboard.html">
+                <form name="creds">
                     <p>Username</p>
                     <input type="text" name="user" placeholder="Enter Username">
                     <p>Password</p>
                     <input type="password" name="pass" placeholder="Enter Password">
-                    <input type="submit" name="" value="Login">
+                    <input type="button" name="" value="Login" onclick="validateForm()">
                     <a href="#">Forget Password?</a><br>
                     <a href="#">Don't have account yet?</a>
                 </form>
@@ -28,6 +28,8 @@
         var password = document.forms["creds"]["pass"].value;
         if (x == "" || password == "") {
             alert("Username or password cannot be empty.");
+            var hist = useHistory();
+            console.log(hist);
             return false;
         }
         else{
@@ -37,22 +39,34 @@
                 formData.append('username', username);
                 formData.append('password', password);
                 xhr.open( 'POST', ip_addr + '/login', true );
+                xhr.send( formData );
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
                         var results = xhr.response;  
                         results = JSON.parse(results);
-                        if(results['status'] == 'admin'){
-                            return true
+                        // alert(results['status']);
+                        if((results['status'] == 'admin') || (results['status'] == 'emp')){
+                            window.location = 'main_dashboard.html'
+                        }
+                        else{
+                            alert("Username or password is incorrect.");
+                            return false
                         }
                     }
+                    // else{
+                    //     alert("Server not responding, try later.");
+                    //     return false
+                    // }
                 };
-                xhr.send( formData );
             }
             catch(err){
                 console.log("TRY ERROR " + err);
+                // alert("Server not responding, try later.");
                 return false
             }
         }
+        
+        
         // if(username == "admin" && password == "admin"){
         //     // location.href = "file:///C:/Users/owais/Documents/food_court_login_form-web_Free12-09-2017_25706885/web/Login%20Form/creditCard.html"
         //     // document.write("<a href='/creditCard.html'")
