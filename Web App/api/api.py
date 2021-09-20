@@ -31,6 +31,13 @@ def update_fn():
     update_db(data)
     return jsonify(data)
 
+@app.route("/login", methods=['POST'])
+def login_fn():
+    data = request.form.to_dict()
+    print("LOGIN #####################################", data)
+    login(data)
+    return jsonify({'status' : 'unk'}) # status : admin, emp, unk
+
 class Connect:
     def __init__(self):
         mydb = mysql.connector.connect(
@@ -64,6 +71,17 @@ def read_db():
         data.append(json_data)
     return data
 
+def login(data):
+    cursor = connect.pointer()[0]
+    sql = "SELECT admin_status FROM login WHERE username = '{0}' AND password = '{1}'".format(data['username'], data['password'])
+    print(sql)
+    cursor.execute(sql)
+    admin = cursor.fetchall()
+    if admin:
+        admin = admin[0][0]
+    else:
+        admin = None
+    print("ADMIN #######", admin)
 
 def insert_db(data):
     keys = ""
