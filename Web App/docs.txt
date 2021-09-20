@@ -46,4 +46,4 @@ TODOS:
 3) logo
 4) emp clock
 5) salary panel
-6) date search for sales records
+6) emp name search for specific results, use admin param in params to distinguish btw admin and non-admin.

@@ -13,6 +13,13 @@ def write_fn():
     insert_db(data)
     return "0"
 
+@app.route("/write_time", methods=['GET', 'POST'])
+def write_time_fn():
+    data = request.form.to_dict()
+    print("#####################################", data)
+    insert_db_time(data)
+    return "0"
+
 @app.route("/read", methods=['POST'])
 def read_fn():
     data = request.form.to_dict()
@@ -26,6 +33,21 @@ def read_fn():
         print("Dates NOT Provided")
         data = read_db()
     print(len(data))
+    return jsonify(data)
+
+@app.route("/read_time", methods=['POST'])
+def read_time_fn():
+    data = request.form.to_dict()
+    from_date = data.get('from_date')
+    to_date = data.get('to_date')
+    if from_date:
+        if to_date:
+            print("Dates Provided")
+            data = read_db_by_date(from_date, to_date)
+    else:
+        print("Dates NOT Provided")
+        data = read_db_time()
+    print(len(data), data)
     return jsonify(data)
 
 @app.route("/read_by_date", methods=['POST'])
@@ -91,6 +113,23 @@ def read_db():
         data.append(json_data)
     return data
 
+def read_db_time():
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM emp_time")
+
+    myresult = cursor.fetchall()
+    print("######################", myresult)
+    data = []
+    keys = ['start_time', 'end_time', 'agent_id']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        # each.pop(0)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    return data
+
 def read_db_by_date(from_date, to_date):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM emp_sales WHERE timestamp BETWEEN '{0}' AND '{1}'".format(from_date, to_date)
@@ -133,6 +172,22 @@ def insert_db(data):
         vals.append(val)
     vals = tuple(vals)
     sql = "INSERT INTO emp_sales ({0}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);".format(keys[:-2])
+    print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql, vals)
+
+    db.commit()
+
+def insert_db_time(data):
+    keys = ""
+    vals = []
+    data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    data['end_time'] = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    vals = tuple(vals)
+    sql = "INSERT INTO emp_time ({0}) VALUES (%s, %s, %s);".format(keys[:-2])
     print("@@@@@@@@@@@@@", (sql, vals))
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
