@@ -47,3 +47,10 @@ TODOS:
 4) emp clock
 5) salary panel
 6) emp name search for specific results, use admin param in params to distinguish btw admin and non-admin.
+
+ADMIN DASH
+panels
+1) register employee
+2) sales overview
+3) expenses and profit management
+4) employee management

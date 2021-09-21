@@ -46,7 +46,9 @@
                         results = JSON.parse(results);
                         // alert(results['status']);
                         if((results['status'] == 'admin') || (results['status'] == 'emp')){
-                            window.location = 'main_dashboard.html'
+                            window.sessionStorage;
+                            sessionStorage.setItem("agent_id", username);
+                            window.location = 'main_dashboard.html';
                         }
                         else{
                             alert("Username or password is incorrect.");

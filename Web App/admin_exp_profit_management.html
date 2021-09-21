@@ -433,21 +433,27 @@
                             <ul class="vertical-nav-menu">
                                 <li class="app-sidebar__heading">Dashboards</li>
                                 <li>
-                                    <a href="main_dashboard.html" class="mm-active">
+                                    <a href="admin_register_employee.html" >
                                         <i class="metismenu-icon pe-7s-rocket"></i>
-                                        Sales Management
+                                        Register Employee
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="time_dashboard.html">
+                                    <a href="admin_employee_management.html">
                                         <i class="metismenu-icon pe-7s-display2"></i>
-                                        Time Management
+                                        Employee Management
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="salary_dashboard.html">
+                                    <a href="admin_exp_profit_management.html" class="mm-active">
                                         <i class="metismenu-icon pe-7s-graph2"></i>
-                                        Salary Management
+                                        Expenses and Profit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="admin_sales_overview.html">
+                                        <i class="metismenu-icon pe-7s-graph2"></i>
+                                        Sales Overview
                                     </a>
                                 </li>
                                 
@@ -529,9 +535,11 @@
                             <div class="main-card mb-3 card">
                                 <div class="card-body">
                                     <h5 class="card-title">Submit New Sale</h5>
-                                    <form class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
+                                    <button class="btn btn-primary" onclick="add_expense()">+</button>
+                                    <form class="needs-validation" id="expense_form" novalidate> <!--action="http://localhost:5000/write" method="post"-->
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
+                                                
                                                 <label for="validationCustom01">Timestamp</label>
                                                 <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
                                                 <script>
@@ -543,135 +551,21 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Agent Name</label>
-                                                <input type="text" name="agent_name" class="form-control" id="validationCustom02" placeholder="Agent Name" required>
+                                                <label for="validationCustom02">Expense Name</label>
+                                                <input type="text" name="exp_name" class="form-control" id="exp_name" placeholder="Paid Rent" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Order ID</label>
-                                                <input type="text" name="order_id" class="form-control" id="validationCustom02" placeholder="Order ID" required>
+                                                <label for="validationCustom02">Expense Amount ($)</label>
+                                                <input type="text" name="exp_amt" class="form-control" id="exp_amt" placeholder="100" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Client Name</label>
-                                                <input type="text" name="client_name" class="form-control" id="validationCustom01" placeholder="Client Name" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Contact</label>
-                                                <input type="text" name="contact" class="form-control" id="validationCustom02" placeholder="Contact" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Email-ID</label>
-                                                <input type="text" name="email_id" class="form-control" id="validationCustom02" placeholder="Email-ID" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Total Tariff</label>
-                                                <input type="text" name="total_tariff" class="form-control" id="validationCustom01" placeholder="Total Tariff" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Deposit</label>
-                                                <input type="text" name="deposit" class="form-control" id="validationCustom02" placeholder="Deposit" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Profit</label>
-                                                <input type="text" name="profit" class="form-control" id="validationCustom02" placeholder="Profit" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Driver Pay</label>
-                                                <input type="text" name="driver_pay" class="form-control" id="validationCustom01" placeholder="Driver Pay" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Payment Method</label>
-                                                <input type="text" name="payment_method" class="form-control" id="validationCustom02" placeholder="Payment Method" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Pickup Date</label>
-                                                <input type="text" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Number of Vehicle</label>
-                                                <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Pickup</label>
-                                                <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Booking Status</label>
-                                                <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Agreement</label>
-                                                <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Agent Notes</label>
-                                                <input type="text" name="agent_notes" class="form-control" id="validationCustom02" placeholder="Agent Notes" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">JT Link</label>
-                                                <input type="text" name="jt_link" class="form-control" id="validationCustom02" placeholder="JT Link" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <!-- <div class="form-group">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
@@ -686,6 +580,12 @@
                                         <button class="btn btn-primary" type="submit">Submit form</button>
                                     </form>
                                     <div id=salesresults></div>
+                                    <script>
+                                        function add_expense(){
+                                            var tabular = document.getElementById('expense_form');
+                                            
+                                        }
+                                    </script>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
                                         const formData = new FormData(e.target);
