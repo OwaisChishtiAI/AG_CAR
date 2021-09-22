@@ -42,11 +42,9 @@ total_tariff: "q"
 
 
 TODOS:
-1) bold form fields
-3) logo
-4) emp clock
 5) salary panel
-6) emp name search for specific results, use admin param in params to distinguish btw admin and non-admin.
+auth redirections
+exp page
 
 ADMIN DASH
 panels

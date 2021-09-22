@@ -527,493 +527,106 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Submit New Sale</h5>
-                                    <form class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Timestamp</label>
-                                                <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
-                                                <script>
-                                                    var datetime = new Date().toLocaleString();
-                                                    document.getElementById("timestamp").value = datetime;
-                                                </script>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Agent Name</label>
-                                                <input type="text" name="agent_name" class="form-control" id="validationCustom02" placeholder="Agent Name" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Order ID</label>
-                                                <input type="text" name="order_id" class="form-control" id="validationCustom02" placeholder="Order ID" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Client Name</label>
-                                                <input type="text" name="client_name" class="form-control" id="validationCustom01" placeholder="Client Name" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Contact</label>
-                                                <input type="text" name="contact" class="form-control" id="validationCustom02" placeholder="Contact" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Email-ID</label>
-                                                <input type="text" name="email_id" class="form-control" id="validationCustom02" placeholder="Email-ID" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Total Tariff</label>
-                                                <input type="text" name="total_tariff" class="form-control" id="validationCustom01" placeholder="Total Tariff" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Deposit</label>
-                                                <input type="text" name="deposit" class="form-control" id="validationCustom02" placeholder="Deposit" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Profit</label>
-                                                <input type="text" name="profit" class="form-control" id="validationCustom02" placeholder="Profit" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Driver Pay</label>
-                                                <input type="text" name="driver_pay" class="form-control" id="validationCustom01" placeholder="Driver Pay" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Payment Method</label>
-                                                <input type="text" name="payment_method" class="form-control" id="validationCustom02" placeholder="Payment Method" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Pickup Date</label>
-                                                <input type="text" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Number of Vehicle</label>
-                                                <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Pickup</label>
-                                                <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Booking Status</label>
-                                                <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Agreement</label>
-                                                <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Agent Notes</label>
-                                                <input type="text" name="agent_notes" class="form-control" id="validationCustom02" placeholder="Agent Notes" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">JT Link</label>
-                                                <input type="text" name="jt_link" class="form-control" id="validationCustom02" placeholder="JT Link" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="form-group">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                                <label class="form-check-label" for="invalidCheck">
-                                                    Agree to terms and conditions
-                                                </label>
-                                                <div class="invalid-feedback">
-                                                    You must agree before submitting.
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <button class="btn btn-primary" type="submit">Submit form</button>
-                                    </form>
-                                    <div id=salesresults></div>
-                                    <script>
-                                        document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData(e.target);
-                                        var agent_id = sessionStorage.getItem("agent_id");
-                                        formData.append("agent_id", agent_id);
-                                        // Now you can use formData.get('foo'), for example.
-                                        // Don't forget e.preventDefault() if you want to stop normal form .submission
-                                        // alert(formData.get('sales'));
-                                        xhr = new XMLHttpRequest();
-                                        xhr.open( 'POST', ip_addr + '/write', true );
-                                        xhr.onreadystatechange = function ( response ) {};
-                                        xhr.send( formData );
-
-                                        // e.preventDefault();
-                                        });
-                                        
-                                    </script>
-                
-                                    <script>
-                                        // Example starter JavaScript for disabling form submissions if there are invalid fields
-                                        (function() {
-                                            'use strict';
-                                            window.addEventListener('load', function() {
-                                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                var forms = document.getElementsByClassName('needs-validation');
-                                                // Loop over them and prevent submission
-                                                var validation = Array.prototype.filter.call(forms, function(form) {
-                                                    form.addEventListener('submit', function(event) {
-                                                        if (form.checkValidity() === false) {
-                                                            event.preventDefault();
-                                                            event.stopPropagation();
-                                                        }
-                                                        form.classList.add('was-validated');
-                                                    }, false);
-                                                });
-                                            }, false);
-                                        })();
-                                    </script>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="col-md-6">
                                 <div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">Sales Records</h5>
-                                        <input type="date" id="from_date" name="from_date">
-                                        <input type="date" id="to_date" name="to_date">
-                                        <button class="btn btn-primary" onclick="populateOverallOverview()">Filter</button>
-                                        <table id="populateTable" class="mb-0 table table-bordered">
+                                    <div class="card-body"><h5 class="card-title">Find Salary of Employee</h5>
+                                        <!-- <input type="date" id="from_date" name="from_date">
+                                        <input type="date" id="to_date" name="to_date"> -->
+                                        <!-- <input type="text" id="user_email2" name="user_email2" placeholder="abc@agc.com"> -->
+                                        <label for="sal_month">For Month and Year:</label>
+                                        <select name="sal_month" id="sal_month">
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                        <input type="text" id="sal_year" name="sal_year" placeholder="2020">
+                                        <button class="btn btn-primary" onclick="salarysearch()">Filter</button>
+                                        <table id="salaryTable" class="mb-0 table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Timestamp</th>
-                                                    <th>Agent Name</th>
-                                                    <th>Order ID</th>
-                                                    <th>Actions</th>
+                                                    <th>Employee ID</th>
+                                                    <th>Days Worked</th>
+                                                    <th>Salary</th>
+                                                    <th>Commision</th>
+                                                    <th>Total</th>
                                                 </tr>
                                                 </thead>
                                         </table>
                                     </div>
-                                    <button class="mb-2 mr-2 btn btn-primary" onclick="populateOverallOverview()">Refresh
-                                    </button>
+                                    <!-- <button class="mb-2 mr-2 btn btn-primary" onclick="salaryview()">Refresh
+                                    </button> -->
                                 </div>
                                 
                             </div>
-
+                        </div>
                             <script>
-                                // function populateDatedOverview(result){
-                                //     var table = document.getElementById("populateTable");
-                                //     var from_date = document.getElementById('from_date').value;
-                                //     var to_date = document.getElementById('to_date').value;
-                                //     if((from_date) && (to_date)){
-                                //         console.log("has values");
-                                //     }
-                                //     else{
-                                //         console.log("has NO values");
-                                //     }
-                                //     console.log(from_date, to_date);
-                                //     xhr = new XMLHttpRequest();
-                                //     const formData = new FormData();
-                                //     formData.append('from_date', from_date);
-                                //     formData.append('to_date', to_date);
-                                    
-                                //     xhr.onreadystatechange = function() {
-                                //         if (xhr.readyState === 4) {
-                                //         // callback(xhr.response);
-                                //             console.log("Data Fetched");
-                                //             var results = xhr.response;  
-                                //             results = JSON.parse(results);
-                                //             console.log("RESULTS: ", results);
-
-                                //             function addCell(tr, text, last=false, btn_id=null) {
-                                //                 function ViewClick(event){
-                                //                 console.log(event.target.id + ' was clicked'); //modal_timestamp
-                                //                 // factionName = results[event.target.id-1]['timestamp'];
-                                //                 // console.log(factionName);
-                                //                 // document.getElementById('modal_timestamp').innerHTML = factionName;
-                                //                 var orig_keys = {"modal_timestamp":"Timestamp", "modal_agent_name":"Agent Name", "modal_order_id":"Order ID", "modal_client_name":"Client Name", "modal_contact":"Contact", "modal_email_id":"Email-ID", "modal_total_tariff":"Total Tarrif", "modal_deposit":"Deposit", "modal_profit":"Profit", "modal_driver_pay":"Driver Pay", "modal_payment_method":"Payment Method", "modal_pickup_date":"Pickup Date", "modal_no_of_vehicles":"Number of Vehicles", "modal_pickup":"Pickup", "modal_booking_status":"Booking Status", "modal_agreement":"Agreement", "modal_agent_notes":"Agent Notes", "modal_jt_link":"JT Link", }
-                                //                 Object.keys(results[event.target.id - 1]).forEach(function(key) {
-                                //                     document.getElementById('modal_' + key).innerHTML = orig_keys['modal_' + key].bold() + ": " + results[event.target.id - 1][key];
-                                //                     })
-                                //                 }
-
-                                //                 function EditClick(event){
-                                //                 console.log(event.target.id + ' was clicked'); //modal_timestamp
-                                //                 Object.keys(results[event.target.id - 1]).forEach(function(key) {
-                                //                     document.getElementById('emodal_' + key).value = results[event.target.id - 1][key];
-                                //                     })
-                                //                 }
-
-                                //                 function DeleteClick(event){
-                                //                     var del = confirm("Are you sure, you want to delete this?")
-                                //                     if(del){
-                                //                         console.log("DELETE" + event.target.id)
-                                //                         var xhr2 = new XMLHttpRequest();
-                                //                         xhr2.open( 'POST', ip_addr + '/delete', true );
-                                //                         xhr2.onreadystatechange = function ( response ) {};
-                                //                         console.log("ORDER ID " + results[event.target.id - 1]['order_id']);
-                                //                         order_id_form = new FormData();
-                                //                         order_id_form.append('order_id', results[event.target.id - 1]['order_id']);
-                                //                         xhr2.send(order_id_form);
-                                //                     }
-                                //                     else{
-                                //                         console.log("NOT DELETE" + event.target.id)
-                                //                     }
-                                //                 }
-
-                                //                 if (last == true) {
-                                //                     var btn = document.createElement('input');
-                                //                     var btn2 = document.createElement('input');
-                                //                     var btn3 = document.createElement('input');
-
-                                //                     var td = tr.insertCell();
-                                //                     btn.id = btn_id
-                                //                     btn.type = "button";
-                                //                     btn.className = "mb-2 mr-2 btn-transition btn btn-outline-primary";
-                                //                     btn.value = "View";
-                                //                     btn.dataset.target = "#exampleModalLong";
-                                //                     btn.dataset.toggle = "modal";
-                                //                     btn.onclick = ViewClick;
-                                //                     td.appendChild(btn);
-
-                                //                     btn2.type = "button";
-                                //                     btn2.id = btn_id
-                                //                     btn2.className = "mb-2 mr-2 btn-transition btn btn-outline-warning";
-                                //                     btn2.value = "Edit";
-                                //                     btn2.dataset.target = "#editmodal";
-                                //                     btn2.dataset.toggle = "modal";
-                                //                     btn2.onclick = EditClick;
-                                //                     td.appendChild(btn2);
-
-                                //                     btn3.type = "button";
-                                //                     btn3.id = btn_id
-                                //                     btn3.className = "mb-2 mr-2 btn-transition btn btn-outline-danger";
-                                //                     btn3.value = "Delete";
-                                //                     btn3.onclick = DeleteClick;
-                                //                     td.appendChild(btn3);
-
-
-                                //                     return td;
-                                //                 }
-                                //                 else{
-                                //                     var td = tr.insertCell();
-                                //                     td.textContent = text;
-                                //                     return td;
-                                //                 }
-                                //             }  
-
-                                //             var i = 1;
-                                //             var Table = document.getElementById("populateTable");
-                                //             Table.innerHTML = "<thead><tr><th>#</th><th>Timestamp</th><th>Agent Name</th><th>Order ID</th><th>Actions</th></tr></thead>";
-                                //             // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
-                                //             // for(var a = 0; a < 4; a++){
-
-                                //             // }
-                                //             for(var j = 0; j < results.length; j++){
-                                //                 var row = table.insertRow();
-                                //                 var item = results[j];
-                                //                 addCell(row, i);
-                                //                 addCell(row, item.timestamp);
-                                //                 addCell(row, item.agent_name);
-                                //                 addCell(row, item.order_id);
-                                //                 addCell(row, "", last=true, btn_id=i);
-                                //                 i = i + 1;
-                                //                 }
-                                                
-                                //         }
-                                //     }
-                                //     xhr.open( 'POST', ip_addr + '/read_by_date', true );
-                                //     xhr.send( formData );
-                                // }
-                                function populateOverallOverview(result){
-                                    var table = document.getElementById("populateTable");
-                                    
-                                    var xhr = new XMLHttpRequest();
-                                    xhr.onreadystatechange = function() {
-                                        if (xhr.readyState === 4) {
-                                        // callback(xhr.response);
-                                            console.log("Data Fetched");
-                                            var results = xhr.response;  
-                                            results = JSON.parse(results);
-                                            console.log("RESULTS: ", results);
-
-                                            function addCell(tr, text, last=false, btn_id=null) {
-                                                function ViewClick(event){
-                                                console.log(event.target.id + ' was clicked'); //modal_timestamp
-                                                // factionName = results[event.target.id-1]['timestamp'];
-                                                // console.log(factionName);
-                                                // document.getElementById('modal_timestamp').innerHTML = factionName;
-                                                var orig_keys = {"modal_timestamp":"Timestamp", "modal_agent_name":"Agent Name", "modal_order_id":"Order ID", "modal_client_name":"Client Name", "modal_contact":"Contact", "modal_email_id":"Email-ID", "modal_total_tariff":"Total Tarrif", "modal_deposit":"Deposit", "modal_profit":"Profit", "modal_driver_pay":"Driver Pay", "modal_payment_method":"Payment Method", "modal_pickup_date":"Pickup Date", "modal_no_of_vehicles":"Number of Vehicles", "modal_pickup":"Pickup", "modal_booking_status":"Booking Status", "modal_agreement":"Agreement", "modal_agent_notes":"Agent Notes", "modal_jt_link":"JT Link", }
-                                                Object.keys(results[event.target.id - 1]).forEach(function(key) {
-                                                    document.getElementById('modal_' + key).innerHTML = orig_keys['modal_' + key].bold() + ": " + results[event.target.id - 1][key];
-                                                    })
-                                                }
-
-                                                function EditClick(event){
-                                                console.log(event.target.id + ' was clicked'); //modal_timestamp
-                                                Object.keys(results[event.target.id - 1]).forEach(function(key) {
-                                                    document.getElementById('emodal_' + key).value = results[event.target.id - 1][key];
-                                                    })
-                                                }
-
-                                                function DeleteClick(event){
-                                                    var del = confirm("Are you sure, you want to delete this?")
-                                                    if(del){
-                                                        console.log("DELETE" + event.target.id)
-                                                        var xhr2 = new XMLHttpRequest();
-                                                        xhr2.open( 'POST', ip_addr + '/delete', true );
-                                                        xhr2.onreadystatechange = function ( response ) {};
-                                                        console.log("ORDER ID " + results[event.target.id - 1]['order_id']);
-                                                        order_id_form = new FormData();
-                                                        order_id_form.append('order_id', results[event.target.id - 1]['order_id']);
-                                                        var agent_id = sessionStorage.getItem("agent_id");
-                                                        order_id_form.append("agent_id", agent_id);
-                                                        xhr2.send(order_id_form);
+                                function salarysearch(){
+                                    var table = document.getElementById("salaryTable");
+                                        
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.onreadystatechange = function() {
+                                            if (xhr.readyState === 4) {
+                                            // callback(xhr.response);
+                                                console.log("Data Fetched");
+                                                var results = xhr.response;  
+                                                results = JSON.parse(results);
+                                                console.log("RESULTS: ", results);
+    
+                                                function addCell(tr, text, last=false, btn_id=null) {
+                                                   
+    
+                                                  
+                                                        var td = tr.insertCell();
+                                                        td.textContent = text;
+                                                        return td;
+                                                    
+                                                }  
+    
+                                                var i = 1;
+                                                var Table = document.getElementById("salaryTable");
+                                                Table.innerHTML = "<thead><tr><th>#</th><th>Employee ID</th><th>Days Worked</th><th>Salary ($)</th><th>Commision ($)</th><th>Total ($)</th></tr></thead>";
+                                                // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
+                                                // for(var a = 0; a < 4; a++){
+    
+                                                // }
+                                                for(var j = 0; j < results.length; j++){
+                                                    var row = table.insertRow();
+                                                    var item = results[j];
+                                                    addCell(row, i);
+                                                    addCell(row, item.agent_id);
+                                                    addCell(row, item.days);
+                                                    addCell(row, item.salary);
+                                                    addCell(row, item.commision);
+                                                    addCell(row, item.total);
+                                                    // addCell(row, "", last=true, btn_id=i);
+                                                    i = i + 1;
                                                     }
-                                                    else{
-                                                        console.log("NOT DELETE" + event.target.id)
-                                                    }
-                                                }
-
-                                                if (last == true) {
-                                                    var btn = document.createElement('input');
-                                                    var btn2 = document.createElement('input');
-                                                    var btn3 = document.createElement('input');
-
-                                                    var td = tr.insertCell();
-                                                    btn.id = btn_id
-                                                    btn.type = "button";
-                                                    btn.className = "mb-2 mr-2 btn-transition btn btn-outline-primary";
-                                                    btn.value = "View";
-                                                    btn.dataset.target = "#exampleModalLong";
-                                                    btn.dataset.toggle = "modal";
-                                                    btn.onclick = ViewClick;
-                                                    td.appendChild(btn);
-
-                                                    btn2.type = "button";
-                                                    btn2.id = btn_id
-                                                    btn2.className = "mb-2 mr-2 btn-transition btn btn-outline-warning";
-                                                    btn2.value = "Edit";
-                                                    btn2.dataset.target = "#editmodal";
-                                                    btn2.dataset.toggle = "modal";
-                                                    btn2.onclick = EditClick;
-                                                    td.appendChild(btn2);
-
-                                                    btn3.type = "button";
-                                                    btn3.id = btn_id
-                                                    btn3.className = "mb-2 mr-2 btn-transition btn btn-outline-danger";
-                                                    btn3.value = "Delete";
-                                                    btn3.onclick = DeleteClick;
-                                                    td.appendChild(btn3);
-
-
-                                                    return td;
-                                                }
-                                                else{
-                                                    var td = tr.insertCell();
-                                                    td.textContent = text;
-                                                    return td;
-                                                }
-                                            }  
-
-                                            var i = 1;
-                                            var Table = document.getElementById("populateTable");
-                                            Table.innerHTML = "<thead><tr><th>#</th><th>Timestamp</th><th>Agent Name</th><th>Order ID</th><th>Actions</th></tr></thead>";
-                                            // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
-                                            // for(var a = 0; a < 4; a++){
-
-                                            // }
-                                            for(var j = 0; j < results.length; j++){
-                                                var row = table.insertRow();
-                                                var item = results[j];
-                                                addCell(row, i);
-                                                addCell(row, item.timestamp);
-                                                addCell(row, item.agent_name);
-                                                addCell(row, item.order_id);
-                                                addCell(row, "", last=true, btn_id=i);
-                                                i = i + 1;
-                                                }
-                                                
+                                                    
+                                            }
                                         }
-                                    }
-                                    
-                                    xhr.open('POST', ip_addr + '/read', true);
-                                    var from_date = document.getElementById('from_date').value;
-                                    var to_date = document.getElementById('to_date').value;
-                                    const formData = new FormData();
-                                    var agent_id = sessionStorage.getItem("agent_id");
-                                    formData.append("agent_id", agent_id);
-                                    if((from_date) && (to_date)){
-                                        console.log("Processing with dates");
-                                        formData.append('from_date', from_date);
-                                        formData.append('to_date', to_date);
+                                        
+                                        xhr.open('POST', ip_addr + '/admin_emp_salary_search', true);
+                                        var month = document.getElementById('sal_month').value;
+                                        var year = document.getElementById('sal_year').value;
+                                        var agent_id = sessionStorage.getItem("agent_id");
+                                        // formData.append("agent_id", agent_id);
+                                        const formData = new FormData();
+                                        // var agent_id = sessionStorage.getItem("agent_id");
+                                        formData.append("agent_id", agent_id);
+                                        formData.append("sal_month", month);
+                                        formData.append("sal_year", year);
                                         xhr.send(formData);
-                                    }
-                                    else{
-                                        console.log("Processing without dates");
-                                        // var formData = '';
-                                        xhr.send(formData);
-                                    }
-                                    
-                                    // console.log(results);                                    
                                 }
                             </script>
-
-
-
-                        </div>
                         <div class="row">
                            
                         

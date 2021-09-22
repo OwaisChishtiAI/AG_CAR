@@ -249,6 +249,245 @@ def admin_emp_salary_search_db(data):
     print({"agent_id": data['agent_id'], "salary": salary, 'commision': commision, 'total': salary+commision})
     return {"agent_id": data['agent_id'], "days": no_of_days, "salary": salary, 'commision': commision, 'total': salary+commision}
 
+@app.route("/admin_write_expense", methods=['GET', 'POST'])
+def admin_write_expense_fn():
+    data = request.form.to_dict()
+    print("#####################################", data)
+    admin_write_expense_db(data)
+    return "0"
+
+def admin_write_expense_db(data):
+    data['timestamp'] = datetime.strptime(data['timestamp'], '%m/%d/%Y, %H:%M:%S %p')
+    keys = ""
+    vals = []
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    vals = tuple(vals)
+    print(keys)
+    sql = "INSERT INTO expenses ({0}) VALUES (%s, %s, %s);".format(keys[:-2])
+    print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql, vals)
+    db.commit()
+
+@app.route("/admin_read_expense", methods=['POST'])
+def admin_read_expense_fn():
+    data = request.form.to_dict()
+    from_date = data.get('from_date')
+    to_date = data.get('to_date')
+    # agent_id = data.get('agent_id')
+    if from_date:
+        if to_date:
+            print("Dates Provided")
+            data = admin_read_expense_db_by_date(from_date, to_date)
+    else:
+        print("Dates NOT Provided")
+        data = admin_read_expense_db()
+    print(len(data), data)
+    return jsonify(data)
+
+def admin_read_expense_db_by_date(from_date, to_date):
+    cursor = connect.pointer()[0]
+    sql = "SELECT * FROM expenses WHERE timestamp BETWEEN '{0}' AND '{1}'".format(from_date, to_date)
+    print(": ", sql)
+    cursor.execute(sql)
+    myresult = cursor.fetchall()
+    data = []
+    keys = ['expense_id', 'timestamp', 'exp_name', 'exp_amt']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        # each.pop(0)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    return data
+
+def admin_read_expense_db():
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM expenses")
+
+    myresult = cursor.fetchall()
+    data = []
+    keys = ['expense_id', 'timestamp', 'exp_name', 'exp_amt']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        # each.pop(0)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    return data
+
+@app.route("/admin_update_expense", methods=['POST'])
+def admin_update_expense_fn():
+    data = request.form.to_dict()
+    print("EDIT #####################################", data)
+    admin_update_expense_db(data)
+    return jsonify(data)
+
+def admin_update_expense_db(data):
+    keys = ""
+    vals = []
+    data['timestamp'] = parser.parse(data['timestamp'])
+    # print("$$$$$$$", type(data['timestamp']), data['timestamp'])
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    keys = keys[:-2]
+    vals = tuple(vals)
+    sql = "UPDATE expenses SET "
+    sql = sql + "exp_name = '{0}', exp_amt = '{1}'".format(data['exp_name'], data['exp_amt'])
+    # sql = sql[:-2] + " "
+    sql = sql + " WHERE {0} = '{1}'".format("expense_id", data['expense_id'])
+    print(sql)
+    # print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+
+@app.route("/admin_partners_write", methods=['POST'])
+def admin_partners_write_fn():
+    data = request.form.to_dict()
+    print("#####################################", data)
+    admin_partners_write_db(data)
+    return "0"
+
+def admin_partners_write_db(data):
+    keys = ""
+    vals = []
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    vals = tuple(vals)
+    print(keys)
+    sql = "INSERT INTO partners ({0}) VALUES (%s, %s);".format(keys[:-2])
+    print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql, vals)
+    db.commit()
+
+@app.route("/admin_partner_read", methods=['POST'])
+def admin_partner_read_fn():
+    data = request.form.to_dict()
+    user_email = data.get('user_email')
+    data = admin_partner_read_db(user_email)
+    print("#####################################", data)
+    return jsonify(data) 
+
+def admin_partner_read_db(user_email):
+    cursor = connect.pointer()[0]
+    if user_email:
+        sql = "SELECT * FROM partners WHERE agent_id = '{}'".format(user_email.strip())
+    else:
+        sql = "SELECT * FROM partners"
+    print(sql)
+    cursor.execute(sql)
+
+    myresult = cursor.fetchall()
+    data = []
+    keys = ['partner_id','agent_id', 'salary']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        # each.pop(0)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    return data
+
+@app.route("/admin_partner_update", methods=['POST'])
+def admin_partner_update_fn():
+    data = request.form.to_dict()
+    print("EDIT #####################################", data)
+    admin_partner_update_db(data)
+    return jsonify(data)
+
+def admin_partner_update_db(data):
+    keys = ""
+    vals = []
+    # data['timestamp'] = parser.parse(data['timestamp'])
+    # print("$$$$$$$", type(data['timestamp']), data['timestamp'])
+    for key, val in data.items():
+        keys = keys + key + ", "
+        vals.append(val)
+    keys = keys[:-2]
+    vals = tuple(vals)
+    sql = "UPDATE partners SET "
+    # for i in range(len(data.values())-1):
+        # if not list(data.keys())[i] == "order_id":
+    sql = sql + "agent_id = '{0}', salary = '{1}'".format(data['agent_id'], data['salary'])
+    sql = sql + "WHERE {0} = '{1}'".format("partner_id", data['partner_id'])
+    print(sql)
+    # print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+
+@app.route("/admin_expenses_delete", methods=['POST'])
+def admin_expenses_delete_fn():
+    expense_id = request.form.to_dict()['expense_id']
+    admin_expenses_delete_db(expense_id)
+    return jsonify({"OK" : "200"})
+
+def admin_expenses_delete_db(expense_id):
+    sql = "DELETE FROM expenses WHERE expense_id = '{0}'".format(expense_id)
+    print("DELETE: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+
+@app.route("/admin_partners_delete", methods=['POST'])
+def admin_partners_delete_fn():
+    partner_id = request.form.to_dict()['partner_id']
+    admin_partners_delete_db(partner_id)
+    return jsonify({"OK" : "200"})
+
+def admin_partners_delete_db(partner_id):
+    sql = "DELETE FROM partners WHERE partner_id = '{0}'".format(partner_id)
+    print("DELETE: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+
+@app.route("/admin_profit_search", methods=['POST'])
+def admin_profit_search_fn():
+    data = request.form.to_dict()
+    figures = admin_profit_search_db(data)
+    return jsonify(figures)
+
+def admin_profit_search_db(data):
+    months = {"January" : 1,"February" : 2,"March" : 3,"April" : 4,"May" : 5,"June" : 6,"July" : 7,"August" : 8,"September" : 9,"October" : 10,"November" : 11,"December" : 12}
+    cursor = connect.pointer()[0]
+    month = int(months[data['sal_month']])
+    year = data['sal_year']
+    revenue = int(data['revenue'])
+    sql = "SELECT * FROM expenses WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
+    print("SEARCH SQL: ", sql)
+    cursor.execute(sql)
+    total_expenses = cursor.fetchall()
+    print("total_expenses: ", total_expenses)
+    total_expenses_li = []
+    for each in total_expenses:
+        total_expenses_li.append(int(each[3]))
+    total_expenses_li = sum(total_expenses_li)
+    print("Total Expenses: ", total_expenses_li)
+    total_profit = revenue - total_expenses_li
+    sql2 = "SELECT * FROM partners"
+    cursor.execute(sql2)
+    partners = cursor.fetchall()
+    figures = []
+    for every in partners:
+        figures.append({"revenue": revenue, "total_expenses": total_expenses_li, "total_profit": total_profit, "agent_id": every[1],\
+            "partner_share": (int(every[2])/100) * total_profit })
+    print("figures: ", figures)
+    return figures
+
 
 """
 ADMIN APIs and Functions END ------------------------------------------------------------------------------------------------------->
@@ -504,4 +743,4 @@ def update_db(data):
 if __name__ == "__main__":
     connect = Connect()
     app.run(debug=True)
-    # admin_emp_salary_search_db({'agent_id': 'sowais672@gmail.com', 'sal_month': 'September', 'sal_year': '2021'})
+    # admin_profit_search_db({'revenue': '500000', 'sal_month': 'September', 'sal_year': '2021'})
