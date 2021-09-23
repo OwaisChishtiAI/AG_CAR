@@ -14,7 +14,8 @@
     <script>
     $( document ).ready(function() {
         var agent_id = sessionStorage.getItem("agent_id");
-        if(agent_id == ""){
+        if((agent_id == "" || agent_id == null)){
+            console.log("Not loged in");
             window.location = 'index.html';
         }
     });

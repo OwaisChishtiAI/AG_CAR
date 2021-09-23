@@ -42,8 +42,6 @@ total_tariff: "q"
 
 
 TODOS:
-auth redirections
-download table as pdf
 
 ADMIN DASH
 panels
