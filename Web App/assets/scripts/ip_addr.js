@@ -1,1 +1,1 @@
-var ip_addr = "http://bbc2-111-88-231-31.ngrok.io"
+var ip_addr = "http://fa1a-111-88-231-54.ngrok.io"

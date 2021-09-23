@@ -42,9 +42,8 @@ total_tariff: "q"
 
 
 TODOS:
-5) salary panel
 auth redirections
-exp page
+download table as pdf
 
 ADMIN DASH
 panels

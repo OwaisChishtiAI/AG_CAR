@@ -234,6 +234,7 @@ def admin_emp_salary_search_db(data):
     sql3 = "SELECT * FROM emp_salary WHERE agent_id = '{}'".format(data['agent_id'])
     cursor.execute(sql3)
     sal_com = cursor.fetchall()
+    print("EMP SALARY: ", sal_com)
     sal_com = sal_com[0]
     salary = int(sal_com[1])
     com_b = int(sal_com[2])

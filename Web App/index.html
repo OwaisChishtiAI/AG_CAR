@@ -45,10 +45,14 @@
                         var results = xhr.response;  
                         results = JSON.parse(results);
                         // alert(results['status']);
-                        if((results['status'] == 'admin') || (results['status'] == 'emp')){
+                        if(results['status'] == 'emp'){
                             window.sessionStorage;
                             sessionStorage.setItem("agent_id", username);
                             window.location = 'main_dashboard.html';
+                        }
+                        else if(results['status'] == 'admin'){
+                            sessionStorage.setItem("agent_id", username);
+                            window.location = 'admin_register_employee.html';
                         }
                         else{
                             alert("Username or password is incorrect.");
