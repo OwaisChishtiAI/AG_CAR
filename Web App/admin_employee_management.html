@@ -544,15 +544,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Salary ($)</label>
+                                                <label for="validationCustom02">Salary (pkr)</label>
                                                 <input type="text" name="salary" class="form-control" id="salary" placeholder="5000" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label for="validationCustom02">Commision below $1500 ($)</label>
-                                                <input type="text" name="com_b_15" class="form-control" id="com_b_15" placeholder="100" required>
+                                                <label for="validationCustom02">Threshold of Commission ($)</label>
+                                                <input type="text" name="X_15" class="form-control" id="X_15" placeholder="1000" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -560,8 +560,15 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Commision above $1500 ($)</label>
+                                                <label for="validationCustom01">Commision above Threshold (pkr)</label>
                                                 <input type="text" name="com_a_15" class="form-control" id="com_a_15" placeholder="110" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="validationCustom02">Commision below Threshold (pkr)</label>
+                                                <input type="text" name="com_b_15" class="form-control" id="com_b_15" placeholder="100" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -635,9 +642,10 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Employee ID</th>
-                                                    <th>Salary</th>
-                                                    <th>Commision below $1500</th>
-                                                    <th>Commision above $1500</th>
+                                                    <th>Salary (pkr)</th>
+                                                    <th>Threshold of Commission ($)</th>
+                                                    <th>Commision above Threshold (pkr)</th>
+                                                    <th>Commision below Threshold (pkr)</th>
                                                 </tr>
                                                 </thead>
                                         </table>
@@ -668,7 +676,7 @@
                                                 // factionName = results[event.target.id-1]['timestamp'];
                                                 // console.log(factionName);
                                                 // document.getElementById('modal_timestamp').innerHTML = factionName;
-                                                var orig_keys = {"modal_agent_id":"Employee ID", "modal_salary":"Salary ($)", "modal_com_b_15":"Commision below $1500 ($)", "modal_com_a_15":"Commision above $1500 ($)"}
+                                                var orig_keys = {"modal_agent_id":"Employee ID", "modal_salary":"Salary ($)", "modal_X_15": "Threshold of Commission ($)" ,"modal_com_a_15":"Commision above Threshold (pkr)", "modal_com_b_15":"Commision below Threshold (pkr)"}
                                                 Object.keys(results[event.target.id - 1]).forEach(function(key) {
                                                     document.getElementById('modal_' + key).innerHTML = orig_keys['modal_' + key].bold() + ": " + results[event.target.id - 1][key];
                                                     })
@@ -743,7 +751,7 @@
 
                                             var i = 1;
                                             var Table = document.getElementById("populateTable");
-                                            Table.innerHTML = "<thead><tr><th>#</th><th>Employee ID</th><th>Salary ($)</th><th>Commision below $1500 ($)</th><th>Commision above $1500 ($)</th></tr></thead>";
+                                            Table.innerHTML = "<thead><tr><th>#</th><th>Employee ID</th><th>Salary ($)</th><th>Threshold of Commission ($)</th><th>Commision below Threshold (pkr) ($)</th><th>Commision above Threshold (pkr)</th></tr></thead>";
                                             // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
                                             // for(var a = 0; a < 4; a++){
 
@@ -754,6 +762,7 @@
                                                 addCell(row, i);
                                                 addCell(row, item.agent_id);
                                                 addCell(row, item.salary);
+                                                addCell(row, item.X_15);
                                                 addCell(row, item.com_b_15);
                                                 addCell(row, item.com_a_15);
                                                 addCell(row, "", last=true, btn_id=i);
@@ -858,7 +867,7 @@
 
                                             var i = 1;
                                             var Table = document.getElementById("salaryTable");
-                                            Table.innerHTML = "<thead><tr><th>#</th><th>Employee ID</th><th>Days Worked</th><th>Salary ($)</th><th>Commision ($)</th><th>Total ($)</th></tr></thead>";
+                                            Table.innerHTML = "<thead><tr><th>#</th><th>Employee ID</th><th>Days Worked</th><th>Salary (pkr)</th><th>Commision (pkr)</th><th>Total ($)</th></tr></thead>";
                                             // var table_cols = ["TimeStamp", "Agent Name", "Order ID", "Actions"]
                                             // for(var a = 0; a < 4; a++){
 
@@ -919,6 +928,7 @@
             <div class="modal-body">
                 <p id="modal_agent_id"></p>
                 <p id="modal_salary"></p>
+                <p id="modal_X_15"></p>
                 <p id="modal_com_b_15"></p>
                 <p id="modal_com_a_15"></p>
             </div>
@@ -947,7 +957,7 @@
                 function update_changes(){
                     var data = document.getElementById("form-2");
                     var formData = new FormData();
-                    var names = ['agent_id', 'salary', 'com_b_15', 'com_a_15']
+                    var names = ['agent_id', 'salary', 'X_15', 'com_b_15', 'com_a_15']
                     // alert(data['agent_name'].value);
                     for(var b=0;b<names.length;b++){
                         formData.append(names[b], data[names[b]].value)
@@ -984,8 +994,8 @@
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="validationCustom02">Commision below $1500 ($)</label>
-                            <input type="text" name="com_b_15" class="form-control" id="emodal_com_b_15" placeholder="" value="" >
+                            <label for="validationCustom02">Threshold of Commission ($)</label>
+                            <input type="text" name="X_15" class="form-control" id="emodal_X_15" placeholder="" value="" >
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -993,8 +1003,15 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
-                            <label for="validationCustom01">Commision above $1500 ($)</label>
+                            <label for="validationCustom01">Commision above Threshold (pkr)</label>
                             <input type="text" name="com_a_15" class="form-control" id="emodal_com_a_15" placeholder="" value=""required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">Commision below Threshold (pkr)</label>
+                            <input type="text" name="com_b_15" class="form-control" id="emodal_com_b_15" placeholder="" value="" >
                             <div class="valid-feedback">
                                 Looks good!
                             </div>

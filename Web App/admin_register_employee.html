@@ -534,7 +534,7 @@
                             <div class="col-md-6">
                             <div class="main-card mb-3 card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Submit New Sale</h5>
+                                    <h5 class="card-title">Register New Employee</h5>
                                     <form class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
                                         <div class="form-row">
                                             <div class="col-md-4 mb-2">
@@ -553,6 +553,15 @@
                                                 <input type="text" name="password" class="form-control" id="password" placeholder="password" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                
+                                                <input class="form-check-input" type="checkbox" value="" id="admin_status" required>
+                                                    Assign Admin Rights
+                                                </label>
+                                                <div class="invalid-feedback">
+                                                    You must agree before submitting.
                                                 </div>
                                             </div>
                                             <!-- <div class="col-md-4 mb-3">
@@ -582,7 +591,14 @@
                                         document.querySelector('form').addEventListener('submit', (e) => {
                                         const formData = new FormData(e.target);
                                         // var agent_id = sessionStorage.getItem("agent_id");
-                                        formData.append("admin_status", 0);
+                                        // formData.append("admin_status", 0);
+                                        if (e.target.admin_status.checked == true){
+                                            formData.append("admin_status", 1);
+                                        }
+                                        else{
+                                            formData.append("admin_status", 0);
+                                        }
+                                        // console.log("ADMIN: " + e.target.admin_status.checked);
                                         // Now you can use formData.get('foo'), for example.
                                         // Don't forget e.preventDefault() if you want to stop normal form .submission
                                         // alert(formData.get('sales'));
@@ -621,7 +637,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">Sales Records</h5>
+                                    <div class="card-body"><h5 class="card-title">Registered Employees Records</h5>
                                         <input type="text" id="user_email" name="user_email" placeholder="abc@agc.com">
                                         <!-- <input type="date" id="to_date" name="to_date"> -->
                                         <button class="btn btn-primary" onclick="viewlogins()">Filter</button>

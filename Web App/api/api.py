@@ -75,7 +75,7 @@ def admin_emp_salary_write_db(data):
         vals.append(val)
     vals = tuple(vals)
     print(keys)
-    sql = "INSERT INTO emp_salary ({0}) VALUES (%s, %s, %s, %s);".format(keys[:-2])
+    sql = "INSERT INTO emp_salary ({0}) VALUES (%s, %s, %s, %s, %s);".format(keys[:-2])
     print("@@@@@@@@@@@@@", (sql, vals))
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
@@ -100,7 +100,7 @@ def admin_emp_salary_read_db(user_email):
 
     myresult = cursor.fetchall()
     data = []
-    keys = ['agent_id', 'salary', 'com_b_15', 'com_a_15']
+    keys = ['agent_id', 'salary', 'com_b_15', 'com_a_15', 'X_15']
     for each in myresult:
         json_data = {}
         each = list(each)
@@ -239,13 +239,14 @@ def admin_emp_salary_search_db(data):
     salary = int(sal_com[1])
     com_b = int(sal_com[2])
     com_a = int(sal_com[3])
-    print(data['agent_id'], salary, com_b, com_a)
+    thresh = int(sal_com[4])
+    print(data['agent_id'], salary, com_b, com_a, thresh)
     salary = salary / 25
     salary = salary * no_of_days
-    if total_tarrif <= 1500:
-        commision = total_tarrif * 0.10
+    if total_tarrif <= thresh:
+        commision = (total_tarrif//100) * com_b
     else:
-        commision = total_tarrif * 0.15
+        commision = (total_tarrif//100) * com_a
     print("#################################################################################################")
     print({"agent_id": data['agent_id'], "salary": salary, 'commision': commision, 'total': salary+commision})
     return {"agent_id": data['agent_id'], "days": no_of_days, "salary": salary, 'commision': commision, 'total': salary+commision}
