@@ -12,12 +12,13 @@ ADMIN APIsa and Functions START
 """
 @app.route("/admin_login_write", methods=['POST'])
 def admin_login_write_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    admin_login_write_db(data)
+    admin_login_write_db(data, connect)
     return "0"
 
-def admin_login_write_db(data):
+def admin_login_write_db(data, connect):
     keys = ""
     vals = []
     for key, val in data.items():
@@ -30,16 +31,19 @@ def admin_login_write_db(data):
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
     db.commit()
+    connect.close()
+    
 
 @app.route("/admin_login_read", methods=['POST'])
 def admin_login_read_fn():
+    connect = Connect()
     data = request.form.to_dict()
     user_email = data.get('user_email')
-    data = admin_login_read_db(user_email)
+    data = admin_login_read_db(user_email, connect)
     print("#####################################", data)
     return jsonify(data) 
 
-def admin_login_read_db(user_email):
+def admin_login_read_db(user_email, connect):
     cursor = connect.pointer()[0]
     if user_email:
         sql = "SELECT * FROM login WHERE username = '{}'".format(user_email.strip())
@@ -58,16 +62,18 @@ def admin_login_read_db(user_email):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
 @app.route("/admin_emp_salary_write", methods=['POST'])
 def admin_emp_salary_write_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    admin_emp_salary_write_db(data)
+    admin_emp_salary_write_db(data, connect)
     return "0"
 
-def admin_emp_salary_write_db(data):
+def admin_emp_salary_write_db(data, connect):
     keys = ""
     vals = []
     for key, val in data.items():
@@ -80,16 +86,18 @@ def admin_emp_salary_write_db(data):
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
     db.commit()
+    connect.close()
 
 @app.route("/admin_emp_salary_read", methods=['POST'])
 def admin_emp_salary_read_fn():
+    connect = Connect()
     data = request.form.to_dict()
     user_email = data.get('user_email')
-    data = admin_emp_salary_read_db(user_email)
+    data = admin_emp_salary_read_db(user_email, connect)
     print("#####################################", data)
     return jsonify(data) 
 
-def admin_emp_salary_read_db(user_email):
+def admin_emp_salary_read_db(user_email, connect):
     cursor = connect.pointer()[0]
     if user_email:
         sql = "SELECT * FROM emp_salary WHERE agent_id = '{}'".format(user_email.strip())
@@ -108,16 +116,18 @@ def admin_emp_salary_read_db(user_email):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
 @app.route("/admin_emp_salary_update", methods=['POST'])
 def admin_emp_salary_update_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("EDIT #####################################", data)
-    admin_emp_salary_update_db(data)
+    admin_emp_salary_update_db(data, connect)
     return jsonify(data)
 
-def admin_emp_salary_update_db(data):
+def admin_emp_salary_update_db(data, connect):
     keys = ""
     vals = []
     # data['timestamp'] = parser.parse(data['timestamp'])
@@ -139,23 +149,27 @@ def admin_emp_salary_update_db(data):
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_emp_salary_delete", methods=['POST'])
 def admin_emp_salary_delete_fn():
+    connect = Connect()
     agent_id = request.form.to_dict()['agent_id']
-    admin_emp_salary_delete_db(agent_id)
+    admin_emp_salary_delete_db(agent_id, connect)
     return jsonify({"OK" : "200"})
 
-def admin_emp_salary_delete_db(agent_id):
+def admin_emp_salary_delete_db(agent_id, connect):
     sql = "DELETE FROM emp_salary WHERE agent_id = '{0}'".format(agent_id)
     print("DELETE: ", sql)
     cursor, db = connect.pointer()
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_read_sales", methods=['POST'])
 def admin_read_sales_fn():
+    connect = Connect()
     data = request.form.to_dict()
     from_date = data.get('from_date')
     to_date = data.get('to_date')
@@ -163,14 +177,14 @@ def admin_read_sales_fn():
     if from_date:
         if to_date:
             print("Dates Provided")
-            data = admin_read_sales_by_date(from_date, to_date)
+            data = admin_read_sales_by_date(from_date, to_date, connect)
     else:
         print("Dates NOT Provided")
-        data = admin_read_sales_db()
+        data = admin_read_sales_db(connect)
     print(len(data), data)
     return jsonify(data)
 
-def admin_read_sales_by_date(from_date, to_date):
+def admin_read_sales_by_date(from_date, to_date, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM emp_sales WHERE timestamp BETWEEN '{0}' AND '{1}'".format(from_date, to_date)
     print(": ", sql)
@@ -185,9 +199,10 @@ def admin_read_sales_by_date(from_date, to_date):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
-def admin_read_sales_db():
+def admin_read_sales_db(connect):
     cursor = connect.pointer()[0]
     cursor.execute("SELECT * FROM emp_sales")
 
@@ -201,15 +216,17 @@ def admin_read_sales_db():
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
 @app.route("/admin_emp_salary_search", methods=['POST'])
 def admin_emp_salary_search_fn():
+    connect = Connect()
     data = request.form.to_dict()
-    figures = admin_emp_salary_search_db(data)
+    figures = admin_emp_salary_search_db(data, connect)
     return jsonify([figures])
 
-def admin_emp_salary_search_db(data):
+def admin_emp_salary_search_db(data, connect):
     months = {"January" : 1,"February" : 2,"March" : 3,"April" : 4,"May" : 5,"June" : 6,"July" : 7,"August" : 8,"September" : 9,"October" : 10,"November" : 11,"December" : 12}
     cursor = connect.pointer()[0]
     month = int(months[data['sal_month']])
@@ -249,16 +266,18 @@ def admin_emp_salary_search_db(data):
         commision = (total_tarrif//100) * com_a
     print("#################################################################################################")
     print({"agent_id": data['agent_id'], "salary": salary, 'commision': commision, 'total': salary+commision})
+    connect.close()
     return {"agent_id": data['agent_id'], "days": no_of_days, "salary": salary, 'commision': commision, 'total': salary+commision}
 
 @app.route("/admin_write_expense", methods=['GET', 'POST'])
 def admin_write_expense_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    admin_write_expense_db(data)
+    admin_write_expense_db(data, connect)
     return "0"
 
-def admin_write_expense_db(data):
+def admin_write_expense_db(data, connect):
     data['timestamp'] = datetime.strptime(data['timestamp'], '%m/%d/%Y, %H:%M:%S %p')
     keys = ""
     vals = []
@@ -272,9 +291,11 @@ def admin_write_expense_db(data):
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
     db.commit()
+    connect.close()
 
 @app.route("/admin_read_expense", methods=['POST'])
 def admin_read_expense_fn():
+    connect = Connect()
     data = request.form.to_dict()
     from_date = data.get('from_date')
     to_date = data.get('to_date')
@@ -282,14 +303,14 @@ def admin_read_expense_fn():
     if from_date:
         if to_date:
             print("Dates Provided")
-            data = admin_read_expense_db_by_date(from_date, to_date)
+            data = admin_read_expense_db_by_date(from_date, to_date, connect)
     else:
         print("Dates NOT Provided")
-        data = admin_read_expense_db()
+        data = admin_read_expense_db(connect)
     print(len(data), data)
     return jsonify(data)
 
-def admin_read_expense_db_by_date(from_date, to_date):
+def admin_read_expense_db_by_date(from_date, to_date, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM expenses WHERE timestamp BETWEEN '{0}' AND '{1}'".format(from_date, to_date)
     print(": ", sql)
@@ -304,9 +325,10 @@ def admin_read_expense_db_by_date(from_date, to_date):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
-def admin_read_expense_db():
+def admin_read_expense_db(connect):
     cursor = connect.pointer()[0]
     cursor.execute("SELECT * FROM expenses")
 
@@ -320,16 +342,18 @@ def admin_read_expense_db():
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
 @app.route("/admin_update_expense", methods=['POST'])
 def admin_update_expense_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("EDIT #####################################", data)
-    admin_update_expense_db(data)
+    admin_update_expense_db(data, connect)
     return jsonify(data)
 
-def admin_update_expense_db(data):
+def admin_update_expense_db(data, connect):
     keys = ""
     vals = []
     data['timestamp'] = parser.parse(data['timestamp'])
@@ -349,15 +373,17 @@ def admin_update_expense_db(data):
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_partners_write", methods=['POST'])
 def admin_partners_write_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    admin_partners_write_db(data)
+    admin_partners_write_db(data, connect)
     return "0"
 
-def admin_partners_write_db(data):
+def admin_partners_write_db(data, connect):
     keys = ""
     vals = []
     for key, val in data.items():
@@ -370,16 +396,18 @@ def admin_partners_write_db(data):
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
     db.commit()
+    connect.close()
 
 @app.route("/admin_partner_read", methods=['POST'])
 def admin_partner_read_fn():
+    connect = Connect()
     data = request.form.to_dict()
     user_email = data.get('user_email')
-    data = admin_partner_read_db(user_email)
+    data = admin_partner_read_db(user_email, connect)
     print("#####################################", data)
     return jsonify(data) 
 
-def admin_partner_read_db(user_email):
+def admin_partner_read_db(user_email, connect):
     cursor = connect.pointer()[0]
     if user_email:
         sql = "SELECT * FROM partners WHERE agent_id = '{}'".format(user_email.strip())
@@ -398,16 +426,18 @@ def admin_partner_read_db(user_email):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
 @app.route("/admin_partner_update", methods=['POST'])
 def admin_partner_update_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("EDIT #####################################", data)
-    admin_partner_update_db(data)
+    admin_partner_update_db(data, connect)
     return jsonify(data)
 
-def admin_partner_update_db(data):
+def admin_partner_update_db(data, connect):
     keys = ""
     vals = []
     # data['timestamp'] = parser.parse(data['timestamp'])
@@ -428,42 +458,48 @@ def admin_partner_update_db(data):
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_expenses_delete", methods=['POST'])
 def admin_expenses_delete_fn():
+    connect = Connect()
     expense_id = request.form.to_dict()['expense_id']
-    admin_expenses_delete_db(expense_id)
+    admin_expenses_delete_db(expense_id, connect)
     return jsonify({"OK" : "200"})
 
-def admin_expenses_delete_db(expense_id):
+def admin_expenses_delete_db(expense_id, connect):
     sql = "DELETE FROM expenses WHERE expense_id = '{0}'".format(expense_id)
     print("DELETE: ", sql)
     cursor, db = connect.pointer()
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_partners_delete", methods=['POST'])
 def admin_partners_delete_fn():
+    connect = Connect()
     partner_id = request.form.to_dict()['partner_id']
-    admin_partners_delete_db(partner_id)
+    admin_partners_delete_db(partner_id, connect)
     return jsonify({"OK" : "200"})
 
-def admin_partners_delete_db(partner_id):
+def admin_partners_delete_db(partner_id, connect):
     sql = "DELETE FROM partners WHERE partner_id = '{0}'".format(partner_id)
     print("DELETE: ", sql)
     cursor, db = connect.pointer()
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 @app.route("/admin_profit_search", methods=['POST'])
 def admin_profit_search_fn():
+    connect = Connect()
     data = request.form.to_dict()
-    figures = admin_profit_search_db(data)
+    figures = admin_profit_search_db(data, connect)
     return jsonify(figures)
 
-def admin_profit_search_db(data):
+def admin_profit_search_db(data, connect):
     months = {"January" : 1,"February" : 2,"March" : 3,"April" : 4,"May" : 5,"June" : 6,"July" : 7,"August" : 8,"September" : 9,"October" : 10,"November" : 11,"December" : 12}
     cursor = connect.pointer()[0]
     month = int(months[data['sal_month']])
@@ -488,6 +524,7 @@ def admin_profit_search_db(data):
         figures.append({"revenue": revenue, "total_expenses": total_expenses_li, "total_profit": total_profit, "agent_id": every[1],\
             "partner_share": (int(every[2])/100) * total_profit })
     print("figures: ", figures)
+    connect.close()
     return figures
 
 
@@ -500,20 +537,23 @@ ADMIN APIs and Functions END ---------------------------------------------------
 
 @app.route("/write", methods=['GET', 'POST'])
 def write_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    insert_db(data)
+    insert_db(data, connect)
     return "0"
 
 @app.route("/write_time", methods=['GET', 'POST'])
 def write_time_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("#####################################", data)
-    insert_db_time(data)
+    insert_db_time(data, connect)
     return "0"
 
 @app.route("/read", methods=['POST'])
 def read_fn():
+    connect = Connect()
     data = request.form.to_dict()
     from_date = data.get('from_date')
     to_date = data.get('to_date')
@@ -521,15 +561,16 @@ def read_fn():
     if from_date:
         if to_date:
             print("Dates Provided")
-            data = read_db_by_date(from_date, to_date, agent_id)
+            data = read_db_by_date(from_date, to_date, agent_id, connect)
     else:
         print("Dates NOT Provided")
-        data = read_db(agent_id)
+        data = read_db(agent_id, connect)
     print(len(data))
     return jsonify(data)
 
 @app.route("/read_time", methods=['POST'])
 def read_time_fn():
+    connect = Connect()
     data = request.form.to_dict()
     from_date = data.get('from_date')
     to_date = data.get('to_date')
@@ -537,44 +578,48 @@ def read_time_fn():
     if from_date:
         if to_date:
             print("Dates Provided")
-            data = read_db_time_by_date(from_date, to_date, agent_id)
+            data = read_db_time_by_date(from_date, to_date, agent_id, connect)
     else:
         print("Dates NOT Provided")
-        data = read_db_time(agent_id)
+        data = read_db_time(agent_id, connect)
     print(len(data), data)
     return jsonify(data)
 
 @app.route("/read_by_date", methods=['POST'])
 def read_by_date_fn():
+    connect = Connect()
     data = request.form.to_dict()
     from_date = data['from_date']
     to_date = data['to_date']
-    data = read_db_by_date(from_date, to_date)
+    data = read_db_by_date(from_date, to_date, connect)
     return jsonify(data)
 
 @app.route("/delete", methods=['POST'])
 def delete_fn():
+    connect = Connect()
     order_id = request.form.to_dict()['order_id']
     agent_id = request.form.to_dict()
     agent_id = agent_id.get('agent_id')
     if not agent_id:
         agent_id = 'null'
     print(type(order_id), len(order_id), order_id)
-    delete_db(order_id, agent_id)
+    delete_db(order_id, agent_id, connect)
     return jsonify({"OK" : "200"})
 
 @app.route("/update", methods=['POST'])
 def update_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("EDIT #####################################", data)
-    update_db(data)
+    update_db(data, connect)
     return jsonify(data)
 
 @app.route("/login", methods=['POST'])
 def login_fn():
+    connect = Connect()
     data = request.form.to_dict()
     print("LOGIN #####################################", data)
-    admin = login(data)
+    admin = login(data, connect)
     print("ADMIN: ", admin)
     return jsonify({'status' : admin}) # status : admin, emp, unk
 
@@ -588,14 +633,19 @@ class Connect:
         )
         self.db = mydb
         self.cursor = self.db.cursor()
+        print("[INFO] Connected to Data base.")
     
     def pointer(self):
         return (self.cursor, self.db)
 
+    def close(self):
+        self.cursor.close()
+        self.db.close()
+
     def fields(self):
         return ["timestamp","agent_name","order_id","client_name","contact","email_id","total_tariff","deposit","profit","driver_pay","payment_method","pickup_date","no_of_vehicles","pickup","booking_status","agreement","agent_notes","jt_link"]
 
-def read_db(agent_id):
+def read_db(agent_id, connect):
     cursor = connect.pointer()[0]
     cursor.execute("SELECT * FROM emp_sales WHERE agent_id = '{}'".format(agent_id))
 
@@ -609,9 +659,10 @@ def read_db(agent_id):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
-def read_db_time(agent_id):
+def read_db_time(agent_id, connect):
     cursor = connect.pointer()[0]
     cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{}'".format(agent_id))
 
@@ -626,9 +677,10 @@ def read_db_time(agent_id):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
-def read_db_by_date(from_date, to_date, agent_id):
+def read_db_by_date(from_date, to_date, agent_id, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM emp_sales WHERE timestamp BETWEEN '{0}' AND '{1}' AND agent_id = '{2}'".format(from_date, to_date, agent_id)
     print(": ", sql)
@@ -643,9 +695,10 @@ def read_db_by_date(from_date, to_date, agent_id):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
 
-def read_db_time_by_date(from_date, to_date, agent_id):
+def read_db_time_by_date(from_date, to_date, agent_id, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM emp_time WHERE start_time BETWEEN '{0}' AND '{1}' AND agent_id = '{2}'".format(from_date, to_date, agent_id)
     print(": ", sql)
@@ -660,10 +713,11 @@ def read_db_time_by_date(from_date, to_date, agent_id):
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
+    connect.close()
     return data
     
 
-def login(data):
+def login(data, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT admin_status FROM login WHERE username = '{0}' AND password = '{1}'".format(data['username'], data['password'])
     print(sql)
@@ -677,9 +731,10 @@ def login(data):
             admin = 'emp'
     else:
         admin = 'null'
+    connect.close()
     return admin
 
-def insert_db(data):
+def insert_db(data, connect):
     keys = ""
     vals = []
     data['timestamp'] = datetime.strptime(data['timestamp'], '%m/%d/%Y, %H:%M:%S %p')
@@ -694,8 +749,9 @@ def insert_db(data):
     cursor.execute(sql, vals)
 
     db.commit()
+    connect.close()
 
-def insert_db_time(data):
+def insert_db_time(data, connect):
     keys = ""
     vals = []
     data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
@@ -710,16 +766,18 @@ def insert_db_time(data):
     cursor.execute(sql, vals)
 
     db.commit()
+    connect.close()
 
-def delete_db(order_id, agent_id):
+def delete_db(order_id, agent_id, connect):
     sql = "DELETE FROM emp_sales WHERE order_id = '{0}' AND agent_id = '{1}'".format(order_id, agent_id)
     print("DELETE: ", sql)
     cursor, db = connect.pointer()
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
-def update_db(data):
+def update_db(data, connect):
     keys = ""
     vals = []
     data['timestamp'] = parser.parse(data['timestamp'])
@@ -741,8 +799,12 @@ def update_db(data):
     cursor.execute(sql)
 
     db.commit()
+    connect.close()
 
 if __name__ == "__main__":
-    connect = Connect()
-    app.run(debug=True)
+    try:
+        # connect = Connect()
+        app.run('0.0.0.0', debug=True)
+    except Exception as e:
+        print("[Exception] ", str(e))
     # admin_profit_search_db({'revenue': '500000', 'sal_month': 'September', 'sal_year': '2021'})
