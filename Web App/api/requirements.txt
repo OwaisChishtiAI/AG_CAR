@@ -1,0 +1,4 @@
+PyMySQL
+flask
+flask-cors
+python-dateutil

@@ -15,6 +15,22 @@ ADMIN APIsa and Functions START
 def test_df():
     return "WORKING"
 
+@app.route("/revoke_access", methods=['POST'])
+def revoke_access_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    revoke_access_db(data, connect)
+    return jsonify({"OK" : "200"})
+
+def revoke_access_db(data, connect):
+    sql = "DELETE FROM login WHERE username = '{0}' AND password = '{1}'".format(data['username'], data['password'])
+    print("DELETE: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
+
 @app.route("/admin_login_write", methods=['POST'])
 def admin_login_write_fn():
     connect = Connect()
@@ -497,22 +513,6 @@ def admin_partners_delete_db(partner_id, connect):
     db.commit()
     connect.close()
 
-@app.route("/revoke_access", methods=['POST'])
-def revoke_access_fn():
-    connect = Connect()
-    data = request.form.to_dict()
-    revoke_access_db(data, connect)
-    return jsonify({"OK" : "200"})
-
-def revoke_access_db(data, connect):
-    sql = "DELETE FROM login WHERE username = '{0}' AND password = '{1}'".format(data['username'], data['password'])
-    print("DELETE: ", sql)
-    cursor, db = connect.pointer()
-    cursor.execute(sql)
-
-    db.commit()
-    connect.close()
-
 @app.route("/admin_profit_search", methods=['POST'])
 def admin_profit_search_fn():
     connect = Connect()
@@ -648,9 +648,9 @@ class Connect:
     def __init__(self):
         mydb = pymysql.connect(
         host="localhost",
-        user="root",
-        password="",
-        database="ag_car_db",
+        user="aguser",
+        password="DroY}@IjMwVU",
+        database="agcasvls_ag_car_db",
         )
         self.db = mydb
         self.cursor = self.db.cursor()

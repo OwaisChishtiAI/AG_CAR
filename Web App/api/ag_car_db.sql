@@ -18,10 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ag_car_db`
+-- Database: `agcasvls_ag_car_db`
 --
-CREATE DATABASE IF NOT EXISTS `ag_car_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `ag_car_db`;
+CREATE DATABASE IF NOT EXISTS `agcasvls_ag_car_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `agcasvls_ag_car_db`;
 
 -- --------------------------------------------------------
 
