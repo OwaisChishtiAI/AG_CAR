@@ -143,7 +143,7 @@ def admin_emp_salary_update_db(data, connect):
     keys = keys[:-2]
     vals = tuple(vals)
     sql = "UPDATE emp_salary SET "
-    for i in range(len(data.values())-1):
+    for i in range(len(data.values())):
         # if not list(data.keys())[i] == "order_id":
         sql = sql + "{0} = '{1}', ".format(list(data.keys())[i], list(data.values())[i])
     sql = sql[:-2] + " "

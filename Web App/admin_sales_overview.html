@@ -808,6 +808,7 @@
                                                         console.log("ORDER ID " + results[event.target.id - 1]['order_id']);
                                                         order_id_form = new FormData();
                                                         order_id_form.append('order_id', results[event.target.id - 1]['order_id']);
+                                                        order_id_form.append('agent_id', results[event.target.id - 1]['agent_id']);
                                                         // var agent_id = sessionStorage.getItem("agent_id");
                                                         // order_id_form.append("agent_id", agent_id);
                                                         xhr2.send(order_id_form);
