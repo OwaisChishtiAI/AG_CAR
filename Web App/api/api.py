@@ -595,12 +595,20 @@ def write_fn():
     insert_db(data, connect)
     return "0"
 
-@app.route("/write_time", methods=['GET', 'POST'])
+@app.route("/write_start_time", methods=['GET', 'POST'])
 def write_time_fn():
     connect = Connect()
     data = request.form.to_dict()
-    print("#####################################", data)
+    print("WRITE ST TIME#####################################", data)
     insert_db_time(data, connect)
+    return "0"
+
+@app.route("/update_end_time", methods=['GET', 'POST'])
+def update_end_time_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("WRITE ST TIME#####################################", data)
+    update_end_time_db(data, connect)
     return "0"
 
 @app.route("/read", methods=['POST'])
@@ -732,6 +740,32 @@ def read_db_time(agent_id, connect):
     connect.close()
     return data
 
+@app.route("/read_time_today_validation", methods=['POST'])
+def read_time_today_validation_fn():
+    connect = Connect()
+    agent_id = request.form.to_dict()['agent_id']
+    print("TIME VALIDATION FOR SHEETS #####################################", agent_id)
+    decision = read_time_today_validation_db(agent_id, connect)
+    return jsonify({'decision' : decision})
+
+def read_time_today_validation_db(agent_id, connect):
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{0}' AND day = {1} AND month = {2} AND year = {3}".format(agent_id, datetime.now().day, datetime.now().month, datetime.now().year))
+    conds_3 = ['no_time', 'need_et', 'need_no']
+    decision = None
+    myresult = cursor.fetchone()
+    print("######################", myresult)
+    if not myresult:
+        print("[INFO] All Empty")
+        decision = conds_3[0]
+    else:
+        if myresult[1] == "0000-00-00 00:00:00":
+            decision = conds_3[1]
+        else:
+            decision = conds_3[2]
+    connect.close()
+    return decision
+
 def read_db_by_date(from_date, to_date, agent_id, connect):
     cursor = connect.pointer()[0]
     sql = "SELECT * FROM emp_sales WHERE timestamp BETWEEN '{0}' AND '{1}' AND agent_id = '{2}'".format(from_date, to_date, agent_id)
@@ -804,18 +838,23 @@ def insert_db(data, connect):
     connect.close()
 
 def insert_db_time(data, connect):
-    keys = ""
-    vals = []
-    data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
-    data['end_time'] = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
-    for key, val in data.items():
-        keys = keys + key + ", "
-        vals.append(val)
-    vals = tuple(vals)
-    sql = "INSERT INTO emp_time ({0}) VALUES (%s, %s, %s);".format(keys[:-2])
+    start_time = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    sql = "INSERT INTO emp_time (start_time, end_time, agent_id, day, month, year) VALUES (%s, %s, %s, %s, %s, %s);"
+    vals = (start_time, 0, data['agent_id'], datetime.now().day, datetime.now().month, datetime.now().year)
     print("@@@@@@@@@@@@@", (sql, vals))
     cursor, db = connect.pointer()
     cursor.execute(sql, vals)
+
+    db.commit()
+    connect.close()
+
+def update_end_time_db(data, connect):
+    end_time = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
+    agent_id = data['agent_id']
+    sql = "UPDATE emp_time SET end_time = '{0}' WHERE agent_id = '{1}' AND day = {2} AND month = {3} AND year = {4}".format(end_time, agent_id, datetime.now().day, datetime.now().month, datetime.now().year)
+    print("UPDATE END TIME: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
 
     db.commit()
     connect.close()
@@ -853,12 +892,13 @@ def update_db(data, connect):
     db.commit()
     connect.close()
 
+
+
 if __name__ == "__main__":
     try:
-        # connect = Connect()
         app.run('0.0.0.0', debug=True)
     except Exception as e:
         print("[Exception] ", str(e))
 
     # connect = Connect()
-    # admin_profit_search_db({'sal_month': 'September', 'sal_year': '2021'}, connect)
+    # read_time_today_validation_db('sowais672@gmail.com', connect)

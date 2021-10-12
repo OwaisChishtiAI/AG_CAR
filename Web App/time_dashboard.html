@@ -525,7 +525,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Start Time</label>
-                                                <input type="text" name="start_time" class="form-control" id="start_time" placeholder="Timestamp" value="" required>
+                                                <input type="text" name="start_time" class="form-control" id="start_time" placeholder="Timestamp" value="" required disabled>
                                                 <script>
                                                     var datetime = new Date().toLocaleString();
                                                     document.getElementById("start_time").value = datetime;
@@ -536,7 +536,7 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">End Time</label>
-                                                <input type="text" name="end_time" class="form-control" id="end_time" placeholder="Timestamp" value="" required>
+                                                <input type="text" name="end_time" class="form-control" id="end_time" placeholder="Timestamp" value="" required disabled>
                                                 <script>
                                                     var datetime = new Date().toLocaleString();
                                                     document.getElementById("end_time").value = datetime;
@@ -545,13 +545,32 @@
                                                     Looks good!
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-md-4 mb-3">
-                                                <label for="validationCustom01">Agent ID</label>
-                                                <input type="text" name="agent_id" class="form-control" id="agent_id" placeholder="abc@agc.com" value="" required>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                            </div> -->
+                                            <script type="text/javascript" src="./assets/scripts/ip_addr.js"></script>
+                                            <script>
+                                                const timesheets = new FormData();
+                                                var timesheets_xhr = new XMLHttpRequest();
+                                                timesheets.append('agent_id', sessionStorage.getItem('agent_id'));
+                                                timesheets_xhr.onreadystatechange = function() {
+                                                if (timesheets_xhr.readyState === 4) {
+                                                    console.log("Data Fetched");
+                                                    var results = timesheets_xhr.response;  
+                                                    results = JSON.parse(results);
+                                                    results = results.decision;
+                                                    console.log("RESULTS: ", results);
+                                                    if (results == 'no_time'){
+                                                        document.getElementById('timesheets_button').innerText = "Set Start Time";
+                                                    }
+                                                    else if(results == 'need_et'){
+                                                        document.getElementById('timesheets_button').innerText = "Set End Time";
+                                                    }
+                                                    else{
+                                                        document.getElementById('timesheets_button').disabled = true;
+                                                    }
+                                                    }
+                                                }
+                                                timesheets_xhr.open('POST', ip_addr + '/read_time_today_validation', true);
+                                                timesheets_xhr.send(timesheets);
+                                            </script>
                                            
                                         </div>
                                         <!-- <div class="form-group">
@@ -565,19 +584,29 @@
                                                 </div>
                                             </div>
                                         </div> -->
-                                        <button class="btn btn-primary" type="submit">Submit form</button>
+                                        <button class="btn btn-primary" type="submit" id="timesheets_button">Submit form</button>
                                     </form>
                                     <div id=salesresults></div>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData(e.target);
+                                        const formData = new FormData();
                                         // Now you can use formData.get('foo'), for example.
                                         // Don't forget e.preventDefault() if you want to stop normal form .submission
                                         // alert(formData.get('sales'));
                                         xhr = new XMLHttpRequest();
                                         var agent_id = sessionStorage.getItem("agent_id");
                                         formData.append("agent_id", agent_id);
-                                        xhr.open( 'POST', ip_addr + '/write_time', true );
+                                        // formData.append('start_time')
+                                        if(document.getElementById('timesheets_button').innerText == "Set Start Time"){
+                                            var start_time_val = document.getElementById("start_time").value;
+                                            formData.append('start_time', start_time_val)
+                                            xhr.open( 'POST', ip_addr + '/write_start_time', false );
+                                        }
+                                        else{
+                                            var end_time_val = document.getElementById("end_time").value;
+                                            formData.append('end_time', end_time_val)
+                                            xhr.open( 'POST', ip_addr + '/update_end_time', false );
+                                        }
                                         xhr.onreadystatechange = function ( response ) {};
                                         xhr.send( formData );
 
