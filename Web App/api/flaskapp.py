@@ -265,7 +265,8 @@ def admin_emp_salary_search_db(data, connect):
     print(sales)
     total_tarrif = []
     for each_sale in sales:
-        total_tarrif.append(int(each_sale[7]))
+        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[7]] if s.isdigit()])
+        total_tarrif.append(int(each_sale_7))
     
     total_tarrif = sum(total_tarrif)
     print("Total Sales: ", total_tarrif)
@@ -517,15 +518,30 @@ def admin_partners_delete_db(partner_id, connect):
 def admin_profit_search_fn():
     connect = Connect()
     data = request.form.to_dict()
-    figures = admin_profit_search_db(data, connect)
-    return jsonify(figures)
+    figures, revenue = admin_profit_search_db(data, connect)
+    return jsonify({"figures": figures, "revenue": revenue})
 
 def admin_profit_search_db(data, connect):
     months = {"January" : 1,"February" : 2,"March" : 3,"April" : 4,"May" : 5,"June" : 6,"July" : 7,"August" : 8,"September" : 9,"October" : 10,"November" : 11,"December" : 12}
     cursor = connect.pointer()[0]
     month = int(months[data['sal_month']])
     year = data['sal_year']
-    revenue = int(data['revenue'])
+    # revenue = int(data['revenue'])
+    ##
+    sqlR = "SELECT total_tariff FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
+    cursor.execute(sqlR)
+    revenue = cursor.fetchall()
+    rev = []
+    for each in revenue:
+        rev.append("".join([str(s) for s in [x for x in each] if s.isdigit()]))
+    rev2 = []
+    for each in rev:
+        if each != "":
+            rev2.append(int(each))
+    revenue = sum(rev2)
+    print("REVENUE: ", revenue)
+    
+    ##
     sql = "SELECT * FROM expenses WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
     print("SEARCH SQL: ", sql)
     cursor.execute(sql)
@@ -533,7 +549,8 @@ def admin_profit_search_db(data, connect):
     print("total_expenses: ", total_expenses)
     total_expenses_li = []
     for each in total_expenses:
-        total_expenses_li.append(int(each[3]))
+        each_3 = "".join([str(s) for s in [x for x in each[3]] if s.isdigit()])
+        total_expenses_li.append(int(each_3))
     total_expenses_li = sum(total_expenses_li)
     print("Total Expenses: ", total_expenses_li)
     total_profit = revenue - total_expenses_li
@@ -546,7 +563,7 @@ def admin_profit_search_db(data, connect):
             "partner_share": (int(every[2])/100) * total_profit })
     print("figures: ", figures)
     connect.close()
-    return figures
+    return figures, revenue
 
 
 """
@@ -828,4 +845,6 @@ if __name__ == "__main__":
         app.run('0.0.0.0', debug=True)
     except Exception as e:
         print("[Exception] ", str(e))
-    # admin_profit_search_db({'revenue': '500000', 'sal_month': 'September', 'sal_year': '2021'})
+
+    # connect = Connect()
+    # admin_profit_search_db({'sal_month': 'September', 'sal_year': '2021'}, connect)

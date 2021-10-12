@@ -523,11 +523,11 @@
                             <div class="main-card mb-3 card">
                                 <div class="card-body">
                                     <h5 class="card-title">Submit New Sale</h5>
-                                    <form class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
+                                    <form class="needs-validation" novalidate> <!--action="http://localhost:5000/write" method="post"-->
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Timestamp</label>
-                                                <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
+                                                <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required disabled>
                                                 <script>
                                                     var datetime = new Date().toLocaleString();
                                                     document.getElementById("timestamp").value = datetime;
@@ -538,7 +538,11 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Agent Name</label>
-                                                <input type="text" name="agent_name" class="form-control" id="validationCustom02" placeholder="Agent Name" required>
+                                                <input type="text" name="agent_name" class="form-control" id="agent_name" placeholder="Agent Name" required disabled>
+                                                <script>
+                                                    var agent_name_placeholder = sessionStorage.getItem('agent_id');
+                                                    document.getElementById('agent_name').value = agent_name_placeholder;
+                                                </script>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -577,7 +581,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Total Tariff</label>
-                                                <input type="text" name="total_tariff" class="form-control" id="validationCustom01" placeholder="Total Tariff" required>
+                                                <input type="text" name="total_tariff" class="form-control" id="total_tariff" placeholder="Total Tariff" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -607,14 +611,21 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Payment Method</label>
-                                                <input type="text" name="payment_method" class="form-control" id="validationCustom02" placeholder="Payment Method" required>
+                                                <!-- <input type="text" name="payment_method" class="form-control" id="validationCustom02" placeholder="Payment Method" required> -->
+                                                <select name="payment_method" id="payment_method" class="form-control">
+                                                        <option>Square</option>
+                                                        <option>Zelle</option>
+                                                        <option>CashApp</option>
+                                                        <option>Venmo</option>
+                                                        <option>Paypal</option>
+                                                    </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Pickup Date</label>
-                                                <input type="text" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
+                                                <input type="date" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -623,21 +634,37 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Number of Vehicle</label>
-                                                <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required>
+                                                <!-- <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required> -->
+                                                <select name="no_of_vehicles" id="no_of_vehicles" class="form-control">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Pickup</label>
-                                                <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required>
+                                                <!-- <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required> -->
+                                                <select name="pickup" id="pickup" class="form-control">
+                                                    <option>Yes</option>
+                                                    <option>No</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Booking Status</label>
-                                                <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required>
+                                                <!-- <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required> -->
+                                                <select name="booking_status" id="booking_status" class="form-control">
+                                                    <option>Open</option>
+                                                    <option>Dispatched</option>
+                                                    <option>Picked Up</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -646,7 +673,11 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Agreement</label>
-                                                <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required>
+                                                <!-- <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required> -->
+                                                <select name="agreement" id="agreement" class="form-control">
+                                                    <option>Signed</option>
+                                                    <option>Not Signed</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -682,18 +713,70 @@
                                     <div id=salesresults></div>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData(e.target);
+                                        const formDataWrite = new FormData();
+                                        write_xhr = new XMLHttpRequest();
                                         var agent_id = sessionStorage.getItem("agent_id");
-                                        formData.append("agent_id", agent_id);
+                                        formDataWrite.append("agent_id", agent_id);
+                                        var names = ['timestamp', 'agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'profit', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link']
+                                        for(var each_name = 0; each_name < names.length; each_name++){
+                                            if(e.target[names[each_name]].value){
+                                                formDataWrite.append(names[each_name], e.target[names[each_name]].value)
+                                            }
+                                            else{
+                                                // alert("Incorrect or Empty Information in " + names[each_name]);
+                                                throw new Error("Incorrect or Empty Information in " + names[each_name]);
+                                            }
+                                        }
+                                        
+                                        cutt_offs = {"Zelle" : 0, "CashApp": 2.75, "Venmo": 2, "Paypal": 3.5}
+                                        var total_tariff_val = document.getElementById('total_tariff').value;
+                                        if (isNaN(total_tariff_val)) 
+                                        {
+                                            alert("Total Tariff must be numbers only.");
+                                        }
+                                        else{
+                                            //
+                                        }
+                                        total_tariff_val = parseFloat(total_tariff_val);
+                                        var payment_method_val = document.getElementById('payment_method').value;
+                                        if (payment_method_val == "Square"){
+                                            total_tariff_val = total_tariff_val - (total_tariff_val * (2.9/100) + 0.30)
+                                        }
+                                        else{
+                                            total_tariff_val = total_tariff_val - (total_tariff_val * (cutt_offs[payment_method_val]/100))
+                                        }
+                                        console.log("TOT TAR: ", total_tariff_val);
+                                        formDataWrite.append("total_tariff", total_tariff_val);
+
+                                        var pickup_date_val= e.target.pickup_date.value;
+                                        pickup_date_val = new Date(pickup_date_val).toLocaleString();
+                                        if (pickup_date_val == 'Invalid Date') 
+                                        {
+                                            alert("Invalid Pick Up Date");
+                                        }
+                                        else{
+                                            //
+                                        }
+                                        formDataWrite.append('pickup_date', pickup_date_val);
+                                        var formDataNew = null;
+                                        var do_confirm = confirm("Submit this record?")
+                                        console.log(typeof do_confirm);
+                                        if(do_confirm == true){
+                                            
+                                            write_xhr.open( 'POST', ip_addr + '/write', false );
+                                            write_xhr.send( formDataWrite );
+                                        }
+                                        else{
+                                            console.log("data not sent.")
+                                            write_xhr.open( 'POST', ip_addr + '/write', false );
+                                            write_xhr.send( '' );
+                                        }
                                         // Now you can use formData.get('foo'), for example.
                                         // Don't forget e.preventDefault() if you want to stop normal form .submission
                                         // alert(formData.get('sales'));
-                                        xhr = new XMLHttpRequest();
-                                        xhr.open( 'POST', ip_addr + '/write', true );
-                                        xhr.onreadystatechange = function ( response ) {};
-                                        xhr.send( formData );
-
-                                        // e.preventDefault();
+                                        // write_xhr = new XMLHttpRequest();
+                                        
+                                        // alert('wait');
                                         });
                                         
                                     </script>
@@ -1080,12 +1163,12 @@
                     for(var b=0;b<names.length;b++){
                         formData.append(names[b], data[names[b]].value)
                     }
-                    xhr = new XMLHttpRequest();
+                    xhr_update = new XMLHttpRequest();
                     var agent_id = sessionStorage.getItem("agent_id");
                     formData.append("agent_id", agent_id);
-                    xhr.open( 'POST', ip_addr + "/update", true );
-                    xhr.onreadystatechange = function ( response ) {};
-                    xhr.send( formData );
+                    xhr_update.open( 'POST', ip_addr + "/update", true );
+                    xhr_update.onreadystatechange = function ( response ) {};
+                    xhr_update.send( formData );
                 }
             </script>
 
@@ -1094,11 +1177,11 @@
                     <div class="form-row">
                         <div class="col-md-4 mb-3">
                             <label for="validationCustom01">Timestamp</label>
-                            <input type="text" name="timestamp" class="form-control" id="emodal_timestamp" placeholder="Timestamp" value="" required>
-                            <script>
+                            <input type="datetime-local" name="timestamp" class="form-control" id="emodal_timestamp" placeholder="Timestamp" value="" required>
+                            <!-- <script>
                                 var datetime = new Date().toLocaleString();
                                 document.getElementById("timestamp").value = datetime;
-                            </script>
+                            </script> -->
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -1175,6 +1258,7 @@
                         <div class="col-md-4 mb-3">
                             <label for="validationCustom02">Payment Method</label>
                             <input type="text" name="payment_method" class="form-control" id="emodal_payment_method" placeholder="Payment Method" value="" required>
+                            
                             <div class="valid-feedback">
                                 Looks good!
                             </div>

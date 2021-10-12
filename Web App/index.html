@@ -43,6 +43,7 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
                         var results = xhr.response;  
+                        console.log("REP: " + results);
                         results = JSON.parse(results);
                         // alert(results['status']);
                         if(results['status'] == 'emp'){

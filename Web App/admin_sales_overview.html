@@ -538,18 +538,49 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Timestamp</label>
-                                                <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
-                                                <script>
+                                                <input type="datetime-local" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
+                                                <!-- <script>
                                                     var datetime = new Date().toLocaleString();
                                                     document.getElementById("timestamp").value = datetime;
-                                                </script>
+                                                </script> -->
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Agent Name</label>
-                                                <input type="text" name="agent_name" class="form-control" id="validationCustom02" placeholder="Agent Name" required>
+                                                <select name="agent_name" id="agent_name" class="form-control">
+                                                    <!-- <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>4</option>
+                                                        <option>5</option> -->
+                                                    </select>
+                                                    <script type="text/javascript" src="./assets/scripts/ip_addr.js"></script>
+                                                <script>
+                                                    // 
+                                                    
+                                                    xhr = new XMLHttpRequest();
+                                                    xhr.open( 'POST', ip_addr + '/get_employee_names', true );
+                                                    xhr.onreadystatechange = function ( response ) {
+                                                        if (xhr.readyState === 4) {
+                                                            console.log("Data Fetched");
+                                                            var results = xhr.response;  
+                                                            results = JSON.parse(results);
+                                                            results = results.employee_names
+                                                            console.log("RESULTS: ", results);
+                                                            var selector = document.getElementById('agent_name');
+                                                            var options_values = "";
+                                                            for(var emp_nm = 0; emp_nm < results.length; emp_nm++){
+                                                                options_values += "<option>" + results[emp_nm] + "</option>"
+                                                            }
+                                                            selector.innerHTML = options_values;
+                                                        }
+                                                    };
+
+                                                    xhr.send( '' );
+                                                    
+                                                </script>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -588,7 +619,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Total Tariff</label>
-                                                <input type="text" name="total_tariff" class="form-control" id="validationCustom01" placeholder="Total Tariff" required>
+                                                <input type="text" name="total_tariff" class="form-control" id="total_tariff" placeholder="Total Tariff" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -618,14 +649,20 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Payment Method</label>
-                                                <input type="text" name="payment_method" class="form-control" id="validationCustom02" placeholder="Payment Method" required>
+                                                <select name="payment_method" id="payment_method" class="form-control" >
+                                                    <option>Square</option>
+                                                    <option>Zelle</option>
+                                                    <option>Cash App</option>
+                                                    <option>Venmo</option>
+                                                    <option>Paypal</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Pickup Date</label>
-                                                <input type="text" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
+                                                <input type="date" name="pickup_date" class="form-control" id="validationCustom02" placeholder="Pickup Date" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -634,21 +671,37 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Number of Vehicle</label>
-                                                <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required>
+                                                <!-- <input type="text" name="no_of_vehicles" class="form-control" id="validationCustom01" placeholder="Number of Vehicle" required> -->
+                                                <select name="no_of_vehicles" id="no_of_vehicles" class="form-control">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Pickup</label>
-                                                <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required>
+                                                <!-- <input type="text" name="pickup" class="form-control" id="validationCustom02" placeholder="Pickup" required> -->
+                                                <select name="pickup" id="pickup" class="form-control">
+                                                    <option>Yes</option>
+                                                    <option>No</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Booking Status</label>
-                                                <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required>
+                                                <!-- <input type="text" name="booking_status" class="form-control" id="validationCustom02" placeholder="Booking Status" required> -->
+                                                <select name="booking_status" id="booking_status" class="form-control">
+                                                    <option>Open</option>
+                                                    <option>Dispatched</option>
+                                                    <option>Picked Up</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -657,7 +710,11 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Agreement</label>
-                                                <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required>
+                                                <!-- <input type="text" name="agreement" class="form-control" id="validationCustom01" placeholder="Agreement" required> -->
+                                                <select name="agreement" id="agreement" class="form-control">
+                                                    <option>Signed</option>
+                                                    <option>Not Signed</option>
+                                                </select>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -680,7 +737,7 @@
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Employee ID</label>
-                                                <input type="text" name="agent_id" class="form-control" id="validationCustom02" placeholder="abcd@agc.com" required>
+                                                <input type="text" name="agent_id" class="form-control" id="agent_id" placeholder="same as agent name" required disabled>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -702,16 +759,78 @@
                                     <div id=salesresults></div>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData(e.target);
-                                        // var agent_id = sessionStorage.getItem("agent_id");
-                                        // formData.append("agent_id", agent_id);
-                                        // Now you can use formData.get('foo'), for example.
-                                        // Don't forget e.preventDefault() if you want to stop normal form .submission
-                                        // alert(formData.get('sales'));
-                                        xhr = new XMLHttpRequest();
-                                        xhr.open( 'POST', ip_addr + '/write', true );
-                                        xhr.onreadystatechange = function ( response ) {};
-                                        xhr.send( formData );
+                                        const formData = new FormData();
+                                        write_xhr = new XMLHttpRequest();
+                                        document.getElementById('agent_id').value = document.getElementById('agent_name').value;
+                                        // console.log(document.getElementById('agent_id').value);
+                                        // console.log(document.getElementById('agent_name').value);
+                                        var names = ['agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'profit', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link', 'agent_id']
+                                        for(var each_name = 0; each_name < names.length; each_name++){
+                                            if(e.target[names[each_name]].value){
+                                                formData.append(names[each_name], e.target[names[each_name]].value)
+                                            }
+                                            else{
+                                                // alert("Incorrect or Empty Information in " + names[each_name]);
+                                                throw new Error("Incorrect or Empty Information in " + names[each_name]);
+                                            }
+                                        }
+
+                                        cutt_offs = {"Zelle" : 0, "CashApp": 2.75, "Venmo": 2, "Paypal": 3.5}
+                                        var total_tariff_val = document.getElementById('total_tariff').value;
+                                        if (isNaN(total_tariff_val)) 
+                                        {
+                                            alert("Total Tariff must be numbers only.");
+                                        }
+                                        total_tariff_val = parseFloat(total_tariff_val);
+                                        var payment_method_val = document.getElementById('payment_method').value;
+                                        if (payment_method_val == "Square"){
+                                            total_tariff_val = total_tariff_val - (total_tariff_val * (2.9/100) + 0.30)
+                                        }
+                                        else{
+                                            total_tariff_val = total_tariff_val - (total_tariff_val * (cutt_offs[payment_method_val]/100))
+                                        }
+                                        console.log("TOT TAR: ", total_tariff_val)
+                                        formData.append("total_tariff", total_tariff_val);
+
+                                        var date_time = e.target.timestamp.value;
+                                        date_time = new Date(date_time).toLocaleString();
+                                        if (date_time == 'Invalid Date') 
+                                        {
+                                            alert("Invalid Time Stamp");
+                                        }
+                                        else{
+                                            //
+                                        }
+                                        formData.append('timestamp', date_time);
+
+                                        
+                                        var pickup_date_val= e.target.pickup_date.value;
+                                        pickup_date_val = new Date(pickup_date_val).toLocaleString();
+                                        if (pickup_date_val == 'Invalid Date') 
+                                        {
+                                            alert("Invalid Pick Up Date");
+                                        }
+                                        else{
+                                            //
+                                        }
+                                        formData.append('pickup_date', pickup_date_val);
+                                        var do_confirm = confirm("Submit this record?")
+                                        console.log(typeof do_confirm);
+                                        if(do_confirm == true){
+                                            
+                                            write_xhr.open( 'POST', ip_addr + '/write', false );
+                                            write_xhr.send( formDataWrite );
+                                        }
+                                        else{
+                                            console.log("data not sent.")
+                                            write_xhr.open( 'POST', ip_addr + '/write', false );
+                                            write_xhr.send( '' );
+                                        }
+                                        // 
+                                        // xhr = new XMLHttpRequest();
+                                        // xhr.open( 'POST', ip_addr + '/write', true );
+                                        // xhr.onreadystatechange = function ( response ) {};
+                                        // xhr.send( formData );
 
                                         // e.preventDefault();
                                         });

@@ -800,7 +800,10 @@
                                         <!-- <input type="date" id="from_date" name="from_date">
                                         <input type="date" id="to_date" name="to_date"> -->
                                         <label for="revenue">Total Revenue ($)</label>
-                                        <input type="text" id="revenue" name="revenue" placeholder="10000">
+                                        <!-- <input type="text" id="revenue" name="revenue" placeholder="10000"> -->
+                                        <label id="revenue_value"><b>Revenue will come here</b></label>
+                                        <br>
+                                        <!-- <button class="btn btn-primary" onclick="revenuesearch()">Fetch Revenue</button> -->
                                         <label for="sal_month">For Month and Year:</label>
                                         <select name="sal_month" id="sal_month">
                                             <option value="January">January</option>
@@ -846,7 +849,7 @@
                             function download_pdf(){
                                 var doc = new jsPDF('p', 'pt');
                                 var elem = document.getElementById("salaryTable");
-                                var rev = document.getElementById("revenue").value;
+                                var rev = document.getElementById("revenue_value").innerText;
                                 var mon = document.getElementById("sal_month").value;
                                 var yr = document.getElementById("sal_year").value;
                                 // var res = doc.autoTableHtmlToJson(elem);
@@ -888,6 +891,9 @@
                             
                             </script> -->
                         <script>
+                            // function revenuesearch(){
+
+                            // }
                             function profitsearch(){
                                 var table = document.getElementById("salaryTable");
                                     
@@ -899,7 +905,7 @@
                                             var results = xhr.response;  
                                             results = JSON.parse(results);
                                             console.log("RESULTS: ", results);
-
+                                            figures = results.figures;
                                             function addCell(tr, text, last=false, btn_id=null) {
                                                
 
@@ -909,6 +915,7 @@
                                                     return td;
                                                 
                                             }  
+                                            document.getElementById('revenue_value').innerText  = results.revenue;
 
                                             var i = 1;
                                             var Table = document.getElementById("salaryTable");
@@ -917,9 +924,9 @@
                                             // for(var a = 0; a < 4; a++){
 
                                             // }
-                                            for(var j = 0; j < results.length; j++){
+                                            for(var j = 0; j < figures.length; j++){
                                                 var row = table.insertRow();
-                                                var item = results[j];
+                                                var item = figures[j];
                                                 addCell(row, i);
                                                 addCell(row, item.revenue);
                                                 addCell(row, item.total_expenses);
@@ -936,10 +943,10 @@
                                     xhr.open('POST', ip_addr + '/admin_profit_search', true);
                                     var month = document.getElementById('sal_month').value;
                                     var year = document.getElementById('sal_year').value;
-                                    var agent_id = document.getElementById('revenue').value;
+                                    // var agent_id = document.getElementById('revenue').value;
                                     const formData = new FormData();
                                     // var agent_id = sessionStorage.getItem("agent_id");
-                                    formData.append("revenue", agent_id);
+                                    // formData.append("revenue", agent_id);
                                     formData.append("sal_month", month);
                                     formData.append("sal_year", year);
                                     xhr.send(formData);
