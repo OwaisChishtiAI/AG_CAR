@@ -283,9 +283,9 @@ def admin_emp_salary_search_db(data, connect):
     salary = salary / 25
     salary = salary * no_of_days
     if total_tarrif <= thresh:
-        commision = (total_tarrif//100) * com_b
+        commision = (total_tarrif//100) * (com_b/100)
     else:
-        commision = (total_tarrif//100) * com_a
+        commision = (total_tarrif//100) * (com_a/100)
     print("#################################################################################################")
     print({"agent_id": data['agent_id'], "salary": salary, 'commision': commision, 'total': salary+commision})
     connect.close()
@@ -607,8 +607,16 @@ def write_time_fn():
 def update_end_time_fn():
     connect = Connect()
     data = request.form.to_dict()
-    print("WRITE ST TIME#####################################", data)
+    print("UPDATE END TIME#####################################", data)
     update_end_time_db(data, connect)
+    return "0"
+
+@app.route("/update_end_shift", methods=['GET', 'POST'])
+def update_end_shift_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("UPDATE SHIFT END#####################################", data)
+    update_end_shift_db(data, connect)
     return "0"
 
 @app.route("/read", methods=['POST'])
@@ -750,8 +758,8 @@ def read_time_today_validation_fn():
 
 def read_time_today_validation_db(agent_id, connect):
     cursor = connect.pointer()[0]
-    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{0}' AND day = {1} AND month = {2} AND year = {3}".format(agent_id, datetime.now().day, datetime.now().month, datetime.now().year))
-    conds_3 = ['no_time', 'need_et', 'need_no']
+    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{0}' AND end_time = '0000-00-00 00:00:00'".format(agent_id))
+    conds_3 = ['no_time', 'need_et']
     decision = None
     myresult = cursor.fetchone()
     print("######################", myresult)
@@ -759,10 +767,7 @@ def read_time_today_validation_db(agent_id, connect):
         print("[INFO] All Empty")
         decision = conds_3[0]
     else:
-        if myresult[1] == "0000-00-00 00:00:00":
-            decision = conds_3[1]
-        else:
-            decision = conds_3[2]
+        decision = conds_3[1]
     connect.close()
     return decision
 
@@ -838,11 +843,26 @@ def insert_db(data, connect):
     connect.close()
 
 def insert_db_time(data, connect):
-    start_time = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
-    sql = "INSERT INTO emp_time (start_time, end_time, agent_id, day, month, year) VALUES (%s, %s, %s, %s, %s, %s);"
-    vals = (start_time, 0, data['agent_id'], datetime.now().day, datetime.now().month, datetime.now().year)
-    print("@@@@@@@@@@@@@", (sql, vals))
     cursor, db = connect.pointer()
+    start_time = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    sql0 = "SELECT  MAX(shift) FROM emp_time WHERE agent_id = '{0}'".format(data['agent_id'])
+    cursor.execute(sql0)
+    max_shift = cursor.fetchone()[0]
+    print("MAX SHIFT: ", max_shift)
+    if max_shift:
+        sql01 = "SELECT end_shift FROM emp_time WHERE agent_id = '{0}' AND shift = {1}".format(data['agent_id'], max_shift)
+        cursor.execute(sql01)
+        end_shift = cursor.fetchone()[0]
+        print("END SHIFT: ", end_shift)
+        if end_shift:
+            new_shift = max_shift + 1
+        else:
+            new_shift = max_shift
+    else:
+        new_shift = 1
+    sql = "INSERT INTO emp_time (start_time, end_time, agent_id, shift, end_shift) VALUES (%s, %s, %s, %s, %s);"
+    vals = (start_time, 0, data['agent_id'], new_shift, 0)
+    print("@@@@@@@@@@@@@", (sql, vals))
     cursor.execute(sql, vals)
 
     db.commit()
@@ -851,9 +871,22 @@ def insert_db_time(data, connect):
 def update_end_time_db(data, connect):
     end_time = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
     agent_id = data['agent_id']
-    sql = "UPDATE emp_time SET end_time = '{0}' WHERE agent_id = '{1}' AND day = {2} AND month = {3} AND year = {4}".format(end_time, agent_id, datetime.now().day, datetime.now().month, datetime.now().year)
+    sql = "UPDATE emp_time SET end_time = '{0}' WHERE agent_id = '{1}' AND end_time='0000-00-00 00:00:00'".format(end_time, agent_id)
     print("UPDATE END TIME: ", sql)
     cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
+
+def update_end_shift_db(data, connect):
+    cursor, db = connect.pointer()
+    agent_id = data['agent_id']
+    sql0 = "SELECT  MAX(shift) FROM emp_time WHERE agent_id = '{0}'".format(data['agent_id'])
+    cursor.execute(sql0)
+    max_shift = cursor.fetchone()[0]
+    sql = "UPDATE emp_time SET end_shift = 1 WHERE agent_id = '{0}' AND shift = {1}".format(agent_id, max_shift)
+    print("UPDATE END SHIFT: ", sql)
     cursor.execute(sql)
 
     db.commit()

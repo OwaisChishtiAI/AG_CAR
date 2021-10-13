@@ -585,34 +585,55 @@
                                             </div>
                                         </div> -->
                                         <button class="btn btn-primary" type="submit" id="timesheets_button">Submit form</button>
+                                        
                                     </form>
+
+                                    <br>
+                                    <button class="btn btn-danger" onclick="shift_end()" id="end_shift_button">End Shift</button>
                                     <div id=salesresults></div>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData();
-                                        // Now you can use formData.get('foo'), for example.
-                                        // Don't forget e.preventDefault() if you want to stop normal form .submission
-                                        // alert(formData.get('sales'));
-                                        xhr = new XMLHttpRequest();
-                                        var agent_id = sessionStorage.getItem("agent_id");
-                                        formData.append("agent_id", agent_id);
-                                        // formData.append('start_time')
-                                        if(document.getElementById('timesheets_button').innerText == "Set Start Time"){
-                                            var start_time_val = document.getElementById("start_time").value;
-                                            formData.append('start_time', start_time_val)
-                                            xhr.open( 'POST', ip_addr + '/write_start_time', false );
+                                        var confirm_to_submit = confirm("Submit timesheet");
+                                        if(confirm_to_submit){
+                                            const formData = new FormData();
+                                            xhr = new XMLHttpRequest();
+                                            var agent_id = sessionStorage.getItem("agent_id");
+                                            formData.append("agent_id", agent_id);
+                                            // formData.append('start_time')
+                                            if(document.getElementById('timesheets_button').innerText == "Set Start Time"){
+                                                var start_time_val = document.getElementById("start_time").value;
+                                                formData.append('start_time', start_time_val)
+                                                xhr.open( 'POST', ip_addr + '/write_start_time', false );
+                                            }
+                                            else{
+                                                var end_time_val = document.getElementById("end_time").value;
+                                                formData.append('end_time', end_time_val)
+                                                xhr.open( 'POST', ip_addr + '/update_end_time', false );
+                                            }
+                                            xhr.onreadystatechange = function ( response ) {};
+                                            xhr.send( formData );
                                         }
-                                        else{
-                                            var end_time_val = document.getElementById("end_time").value;
-                                            formData.append('end_time', end_time_val)
-                                            xhr.open( 'POST', ip_addr + '/update_end_time', false );
-                                        }
-                                        xhr.onreadystatechange = function ( response ) {};
-                                        xhr.send( formData );
 
                                         // e.preventDefault();
                                         });
                                         
+                                    </script>
+                                    <script>
+                                        function shift_end(){
+                                            if(document.getElementById('timesheets_button').innerText == "Set End Time"){
+                                                alert("Set End Time First to end shift")
+                                            }
+                                            else{
+                                                const formData = new FormData();
+                                                xhr = new XMLHttpRequest();
+                                                var agent_id = sessionStorage.getItem("agent_id");
+                                                formData.append("agent_id", agent_id);
+                                                
+                                                xhr.open( 'POST', ip_addr + '/update_end_shift', false );
+                                                xhr.onreadystatechange = function ( response ) {};
+                                                xhr.send( formData );
+                                            }
+                                        }
                                     </script>
                 
                                     <script>
