@@ -531,10 +531,13 @@ def admin_profit_search_db(data, connect):
     sqlR = "SELECT total_tariff FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
     cursor.execute(sqlR)
     revenue = cursor.fetchall()
+    print("revenues: ", revenue)
     rev = []
     for each in revenue:
-        rev.append("".join([str(s) for s in [x for x in each] if s.isdigit() or s=="."]))
+        rev.append("".join([str(s) for s in [x for x in each[0]] if s.isdigit() or s=="."]))
+    print("ind revs: ", rev)
     revenue = sum([float(x) for x in rev])
+    revenue = float("{:.2f}".format(revenue))
     print("REVENUE: ", revenue)
     
     ##
@@ -578,6 +581,74 @@ def get_employee_names_db(connect):
         data['employee_names'].append(each[0])
     connect.close()
     return data
+
+@app.route("/admin_read_time", methods=['POST'])
+def admin_read_time_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    agent_id = data.get('agent_id')
+    data = admin_read_time_db(agent_id, connect)
+    print(len(data), data)
+    return jsonify(data)
+
+def admin_read_time_db(agent_id, connect):
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{}'".format(agent_id))
+
+    myresult = cursor.fetchall()
+    print("######################", myresult)
+    data = []
+    keys = ['time_id','start_time', 'end_time', 'agent_id']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    connect.close()
+    return data
+
+@app.route("/admin_emp_timesheet_update", methods=['POST'])
+def admin_emp_timesheet_update_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("EDIT #####################################", data)
+    admin_emp_timesheet_update_db(data, connect)
+    return jsonify(data)
+
+def admin_emp_timesheet_update_db(data, connect):
+    keys = ""
+    vals = []
+    # data['timestamp'] = parser.parse(data['timestamp'])
+    # print("$$$$$$$", type(data['timestamp']), data['timestamp'])
+    data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    data['end_time'] = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
+    sql = "UPDATE emp_time SET start_time = '{0}', end_time = '{1}'".format(data['start_time'], data['end_time'])
+    sql = sql + "WHERE {0} = '{1}' AND {2} = '{3}'".format("time_id", data['time_id'], "agent_id", data['agent_id'])
+    print(sql)
+    # print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
+
+@app.route("/admin_emp_timesheet_delete", methods=['POST'])
+def admin_emp_timesheet_delete_fn():
+    connect = Connect()
+    agent_id = request.form.to_dict()['agent_id']
+    time_id = request.form.to_dict()['time_id']
+    admin_emp_timesheet_delete_db(agent_id,time_id, connect)
+    return jsonify({"OK" : "200"})
+
+def admin_emp_timesheet_delete_db(agent_id, time_id, connect):
+    sql = "DELETE FROM emp_time WHERE agent_id = '{0}' AND time_id = {1}".format(agent_id, time_id)
+    print("DELETE: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
 
 
 """
@@ -741,7 +812,7 @@ def read_db_time(agent_id, connect):
     for each in myresult:
         json_data = {}
         each = list(each)
-        # each.pop(0)
+        each.pop(0)
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
@@ -800,7 +871,7 @@ def read_db_time_by_date(from_date, to_date, agent_id, connect):
     for each in myresult:
         json_data = {}
         each = list(each)
-        # each.pop(0)
+        each.pop(0)
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)

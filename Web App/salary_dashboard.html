@@ -606,18 +606,23 @@
                                                     
                                             }
                                         }
-                                        
-                                        xhr.open('POST', ip_addr + '/admin_emp_salary_search', true);
                                         var month = document.getElementById('sal_month').value;
                                         var year = document.getElementById('sal_year').value;
-                                        var agent_id = sessionStorage.getItem("agent_id");
-                                        // formData.append("agent_id", agent_id);
-                                        const formData = new FormData();
-                                        // var agent_id = sessionStorage.getItem("agent_id");
-                                        formData.append("agent_id", agent_id);
-                                        formData.append("sal_month", month);
-                                        formData.append("sal_year", year);
-                                        xhr.send(formData);
+                                        if(month && year){
+                                            xhr.open('POST', ip_addr + '/admin_emp_salary_search', true);
+                                            
+                                            var agent_id = sessionStorage.getItem("agent_id");
+                                            // formData.append("agent_id", agent_id);
+                                            const formData = new FormData();
+                                            // var agent_id = sessionStorage.getItem("agent_id");
+                                            formData.append("agent_id", agent_id);
+                                            formData.append("sal_month", month);
+                                            formData.append("sal_year", year);
+                                            xhr.send(formData);
+                                        }
+                                        else{
+                                            alert("Month or Year is missing.")
+                                        }
                                 }
                             </script>
                         <div class="row">

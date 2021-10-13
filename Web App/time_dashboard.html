@@ -593,7 +593,7 @@
                                     <div id=salesresults></div>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        var confirm_to_submit = confirm("Submit timesheet");
+                                        var confirm_to_submit = confirm("Submit timesheet?");
                                         if(confirm_to_submit){
                                             const formData = new FormData();
                                             xhr = new XMLHttpRequest();
@@ -624,14 +624,17 @@
                                                 alert("Set End Time First to end shift")
                                             }
                                             else{
-                                                const formData = new FormData();
-                                                xhr = new XMLHttpRequest();
-                                                var agent_id = sessionStorage.getItem("agent_id");
-                                                formData.append("agent_id", agent_id);
-                                                
-                                                xhr.open( 'POST', ip_addr + '/update_end_shift', false );
-                                                xhr.onreadystatechange = function ( response ) {};
-                                                xhr.send( formData );
+                                                var confirn_end_shift = confirm("Do you want to end shift?");
+                                                if(confirn_end_shift){
+                                                    const formData = new FormData();
+                                                    xhr = new XMLHttpRequest();
+                                                    var agent_id = sessionStorage.getItem("agent_id");
+                                                    formData.append("agent_id", agent_id);
+                                                    
+                                                    xhr.open( 'POST', ip_addr + '/update_end_shift', false );
+                                                    xhr.onreadystatechange = function ( response ) {};
+                                                    xhr.send( formData );
+                                                }
                                             }
                                         }
                                     </script>
