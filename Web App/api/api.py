@@ -252,11 +252,11 @@ def admin_emp_salary_search_db(data, connect):
     cursor = connect.pointer()[0]
     month = int(months[data['sal_month']])
     year = data['sal_year']
-    sql = "SELECT * FROM emp_time WHERE '{0}-{1}-01' <= end_time AND end_time < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
+    sql = "SELECT DISTINCT(shift) FROM emp_time WHERE '{0}-{1}-01' <= end_time AND end_time < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
     print("SEARCH: ", sql)
     cursor.execute(sql)
     days = cursor.fetchall()
-    no_of_days = len(days)
+    no_of_days = len(days) // 2
     print(days, no_of_days)
     sql2 = "SELECT * FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
     print("sql2: ", sql2)
@@ -265,9 +265,9 @@ def admin_emp_salary_search_db(data, connect):
     print(sales)
     total_tarrif = []
     for each_sale in sales:
-        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[7]] if s.isdigit()])
-        total_tarrif.append(int(each_sale_7))
-    
+        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[7]] if s.isdigit() or s=="."])
+        total_tarrif.append(float(each_sale_7))
+    print("Before sum: ", total_tarrif)
     total_tarrif = sum(total_tarrif)
     print("Total Sales: ", total_tarrif)
     sql3 = "SELECT * FROM emp_salary WHERE agent_id = '{}'".format(data['agent_id'])
@@ -533,8 +533,8 @@ def admin_profit_search_db(data, connect):
     revenue = cursor.fetchall()
     rev = []
     for each in revenue:
-        rev.append("".join([str(s) for s in [x for x in each] if s.isdigit()]))
-    revenue = sum([int(x) for x in rev])
+        rev.append("".join([str(s) for s in [x for x in each] if s.isdigit() or s=="."]))
+    revenue = sum([float(x) for x in rev])
     print("REVENUE: ", revenue)
     
     ##
@@ -545,8 +545,8 @@ def admin_profit_search_db(data, connect):
     print("total_expenses: ", total_expenses)
     total_expenses_li = []
     for each in total_expenses:
-        each_3 = "".join([str(s) for s in [x for x in each[3]] if s.isdigit()])
-        total_expenses_li.append(int(each_3))
+        each_3 = "".join([str(s) for s in [x for x in each[3]] if s.isdigit()  or s=="."])
+        total_expenses_li.append(float(each_3))
     total_expenses_li = sum(total_expenses_li)
     print("Total Expenses: ", total_expenses_li)
     total_profit = revenue - total_expenses_li
