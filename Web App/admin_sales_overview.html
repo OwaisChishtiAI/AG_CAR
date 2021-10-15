@@ -540,7 +540,7 @@
                             <div class="main-card mb-3 card">
                                 <div class="card-body">
                                     <h5 class="card-title">Submit New Sale</h5>
-                                    <form class="needs-validation" novalidate > <!--action="http://localhost:5000/write" method="post"-->
+                                    <form class="needs-validation" novalidate onsubmit="return false"> <!--action="http://localhost:5000/write" method="post"-->
                                         <div class="form-row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom01">Timestamp</label>
@@ -639,7 +639,7 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Profit</label>
-                                                <input type="text" name="profit" class="form-control" id="validationCustom02" placeholder="Profit" required>
+                                                <input type="text" name="profit" class="form-control" id="profit" placeholder="Profit" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -770,7 +770,7 @@
                                         document.getElementById('agent_id').value = document.getElementById('agent_name').value;
                                         // console.log(document.getElementById('agent_id').value);
                                         // console.log(document.getElementById('agent_name').value);
-                                        var names = ['agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'profit', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link', 'agent_id']
+                                        var names = ['agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'total_tariff', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link', 'agent_id']
                                         for(var each_name = 0; each_name < names.length; each_name++){
                                             if(e.target[names[each_name]].value){
                                                 formData.append(names[each_name], e.target[names[each_name]].value)
@@ -782,10 +782,10 @@
                                         }
 
                                         cutt_offs = {"Zelle" : 0, "CashApp": 2.75, "Venmo": 2, "Paypal": 3.5}
-                                        var total_tariff_val = document.getElementById('total_tariff').value;
+                                        var total_tariff_val = document.getElementById('profit').value;
                                         if (isNaN(total_tariff_val)) 
                                         {
-                                            alert("Total Tariff must be numbers only.");
+                                            alert("Profit must be numbers only.");
                                         }
                                         total_tariff_val = parseFloat(total_tariff_val);
                                         var payment_method_val = document.getElementById('payment_method').value;
@@ -796,7 +796,7 @@
                                             total_tariff_val = total_tariff_val - (total_tariff_val * (cutt_offs[payment_method_val]/100))
                                         }
                                         console.log("TOT TAR: ", total_tariff_val)
-                                        formData.append("total_tariff", total_tariff_val);
+                                        formData.append("profit", total_tariff_val);
 
                                         var date_time = e.target.timestamp.value;
                                         date_time = new Date(date_time).toLocaleString();
@@ -825,7 +825,7 @@
                                         if(do_confirm == true){
                                             
                                             write_xhr.open( 'POST', ip_addr + '/write', false );
-                                            write_xhr.send( formDataWrite );
+                                            write_xhr.send( formData );
                                         }
                                         else{
                                             console.log("data not sent.")

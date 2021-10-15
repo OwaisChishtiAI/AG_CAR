@@ -546,11 +546,11 @@
                                             <div class="col-md-4 mb-3">
                                                 
                                                 <label for="validationCustom01">Timestamp</label>
-                                                <input type="text" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
-                                                <script>
+                                                <input type="datetime-local" name="timestamp" class="form-control" id="timestamp" placeholder="Timestamp" value="" required>
+                                                <!-- <script>
                                                     var datetime = new Date().toLocaleString();
                                                     document.getElementById("timestamp").value = datetime;
-                                                </script>
+                                                </script> -->
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -593,14 +593,17 @@
                                     </script>
                                     <script>
                                         document.querySelector('form').addEventListener('submit', (e) => {
-                                        const formData = new FormData(e.target);
+                                        const formData = new FormData();
+                                        formData.append('timestamp', new Date(e.target.timestamp.value).toLocaleString());
+                                        formData.append('exp_amt',e.target.exp_amt.value);
+                                        formData.append('exp_name',e.target.exp_name.value);
                                         // var agent_id = sessionStorage.getItem("agent_id");
                                         // formData.append("agent_id", agent_id);
                                         // Now you can use formData.get('foo'), for example.
                                         // Don't forget e.preventDefault() if you want to stop normal form .submission
                                         // alert(formData.get('sales'));
                                         xhr = new XMLHttpRequest();
-                                        xhr.open( 'POST', ip_addr + '/admin_write_expense', true );
+                                        xhr.open( 'POST', ip_addr + '/admin_write_expense', false );
                                         xhr.onreadystatechange = function ( response ) {};
                                         xhr.send( formData );
 

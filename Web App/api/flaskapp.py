@@ -252,11 +252,11 @@ def admin_emp_salary_search_db(data, connect):
     cursor = connect.pointer()[0]
     month = int(months[data['sal_month']])
     year = data['sal_year']
-    sql = "SELECT * FROM emp_time WHERE '{0}-{1}-01' <= end_time AND end_time < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
+    sql = "SELECT DISTINCT(shift) FROM emp_time WHERE '{0}-{1}-01' <= end_time AND end_time < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
     print("SEARCH: ", sql)
     cursor.execute(sql)
     days = cursor.fetchall()
-    no_of_days = len(days)
+    no_of_days = len(days) // 2
     print(days, no_of_days)
     sql2 = "SELECT * FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01' AND agent_id = '{4}'".format(str(year), str(month), str(year), str(month+1), data['agent_id'])
     print("sql2: ", sql2)
@@ -265,9 +265,11 @@ def admin_emp_salary_search_db(data, connect):
     print(sales)
     total_tarrif = []
     for each_sale in sales:
-        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[7]] if s.isdigit()])
-        total_tarrif.append(int(each_sale_7))
-    
+        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[9]] if s.isdigit() or s=="."])
+        if each_sale_7:
+            print("EACH SALE: ", each_sale_7, type(each_sale_7))
+            total_tarrif.append(float(each_sale_7))
+    print("Before sum: ", total_tarrif)
     total_tarrif = sum(total_tarrif)
     print("Total Sales: ", total_tarrif)
     sql3 = "SELECT * FROM emp_salary WHERE agent_id = '{}'".format(data['agent_id'])
@@ -283,9 +285,9 @@ def admin_emp_salary_search_db(data, connect):
     salary = salary / 25
     salary = salary * no_of_days
     if total_tarrif <= thresh:
-        commision = (total_tarrif//100) * com_b
+        commision = (total_tarrif//100) * (com_b/100)
     else:
-        commision = (total_tarrif//100) * com_a
+        commision = (total_tarrif//100) * (com_a/100)
     print("#################################################################################################")
     print({"agent_id": data['agent_id'], "salary": salary, 'commision': commision, 'total': salary+commision})
     connect.close()
@@ -528,17 +530,18 @@ def admin_profit_search_db(data, connect):
     year = data['sal_year']
     # revenue = int(data['revenue'])
     ##
-    sqlR = "SELECT total_tariff FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
+    sqlR = "SELECT profit FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
     cursor.execute(sqlR)
     revenue = cursor.fetchall()
+    print("revenues: ", revenue)
     rev = []
     for each in revenue:
-        rev.append("".join([str(s) for s in [x for x in each] if s.isdigit()]))
-    rev2 = []
-    for each in rev:
-        if each != "":
-            rev2.append(int(each))
-    revenue = sum(rev2)
+        each_sale = "".join([str(s) for s in [x for x in each[0]] if s.isdigit() or s=="."])
+        if each_sale:
+            rev.append(each_sale)
+    print("ind revs: ", rev)
+    revenue = sum([float(x) for x in rev])
+    revenue = float("{:.2f}".format(revenue))
     print("REVENUE: ", revenue)
     
     ##
@@ -549,8 +552,8 @@ def admin_profit_search_db(data, connect):
     print("total_expenses: ", total_expenses)
     total_expenses_li = []
     for each in total_expenses:
-        each_3 = "".join([str(s) for s in [x for x in each[3]] if s.isdigit()])
-        total_expenses_li.append(int(each_3))
+        each_3 = "".join([str(s) for s in [x for x in each[3]] if s.isdigit()  or s=="."])
+        total_expenses_li.append(float(each_3))
     total_expenses_li = sum(total_expenses_li)
     print("Total Expenses: ", total_expenses_li)
     total_profit = revenue - total_expenses_li
@@ -564,6 +567,92 @@ def admin_profit_search_db(data, connect):
     print("figures: ", figures)
     connect.close()
     return figures, revenue
+
+@app.route("/get_employee_names", methods=['POST'])
+def get_employee_names_fn():
+    connect = Connect()
+    data = get_employee_names_db(connect)
+    print("#####################################", data)
+    return jsonify(data)
+
+def get_employee_names_db(connect):
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT username FROM login")
+
+    myresult = cursor.fetchall()
+    data = {"employee_names" : []}
+    for each in myresult:
+        data['employee_names'].append(each[0])
+    connect.close()
+    return data
+
+@app.route("/admin_read_time", methods=['POST'])
+def admin_read_time_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    agent_id = data.get('agent_id')
+    data = admin_read_time_db(agent_id, connect)
+    print(len(data), data)
+    return jsonify(data)
+
+def admin_read_time_db(agent_id, connect):
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{}'".format(agent_id))
+
+    myresult = cursor.fetchall()
+    print("######################", myresult)
+    data = []
+    keys = ['time_id','start_time', 'end_time', 'agent_id']
+    for each in myresult:
+        json_data = {}
+        each = list(each)
+        for x,y in zip(keys, each):
+            json_data[x] = y
+        data.append(json_data)
+    connect.close()
+    return data
+
+@app.route("/admin_emp_timesheet_update", methods=['POST'])
+def admin_emp_timesheet_update_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("EDIT #####################################", data)
+    admin_emp_timesheet_update_db(data, connect)
+    return jsonify(data)
+
+def admin_emp_timesheet_update_db(data, connect):
+    keys = ""
+    vals = []
+    # data['timestamp'] = parser.parse(data['timestamp'])
+    # print("$$$$$$$", type(data['timestamp']), data['timestamp'])
+    data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    data['end_time'] = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
+    sql = "UPDATE emp_time SET start_time = '{0}', end_time = '{1}'".format(data['start_time'], data['end_time'])
+    sql = sql + "WHERE {0} = '{1}' AND {2} = '{3}'".format("time_id", data['time_id'], "agent_id", data['agent_id'])
+    print(sql)
+    # print("@@@@@@@@@@@@@", (sql, vals))
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
+
+@app.route("/admin_emp_timesheet_delete", methods=['POST'])
+def admin_emp_timesheet_delete_fn():
+    connect = Connect()
+    agent_id = request.form.to_dict()['agent_id']
+    time_id = request.form.to_dict()['time_id']
+    admin_emp_timesheet_delete_db(agent_id,time_id, connect)
+    return jsonify({"OK" : "200"})
+
+def admin_emp_timesheet_delete_db(agent_id, time_id, connect):
+    sql = "DELETE FROM emp_time WHERE agent_id = '{0}' AND time_id = {1}".format(agent_id, time_id)
+    print("DELETE: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
 
 
 """
@@ -581,12 +670,28 @@ def write_fn():
     insert_db(data, connect)
     return "0"
 
-@app.route("/write_time", methods=['GET', 'POST'])
+@app.route("/write_start_time", methods=['GET', 'POST'])
 def write_time_fn():
     connect = Connect()
     data = request.form.to_dict()
-    print("#####################################", data)
+    print("WRITE ST TIME#####################################", data)
     insert_db_time(data, connect)
+    return "0"
+
+@app.route("/update_end_time", methods=['GET', 'POST'])
+def update_end_time_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("UPDATE END TIME#####################################", data)
+    update_end_time_db(data, connect)
+    return "0"
+
+@app.route("/update_end_shift", methods=['GET', 'POST'])
+def update_end_shift_fn():
+    connect = Connect()
+    data = request.form.to_dict()
+    print("UPDATE SHIFT END#####################################", data)
+    update_end_shift_db(data, connect)
     return "0"
 
 @app.route("/read", methods=['POST'])
@@ -711,12 +816,35 @@ def read_db_time(agent_id, connect):
     for each in myresult:
         json_data = {}
         each = list(each)
-        # each.pop(0)
+        each.pop(0)
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
     connect.close()
     return data
+
+@app.route("/read_time_today_validation", methods=['POST'])
+def read_time_today_validation_fn():
+    connect = Connect()
+    agent_id = request.form.to_dict()['agent_id']
+    print("TIME VALIDATION FOR SHEETS #####################################", agent_id)
+    decision = read_time_today_validation_db(agent_id, connect)
+    return jsonify({'decision' : decision})
+
+def read_time_today_validation_db(agent_id, connect):
+    cursor = connect.pointer()[0]
+    cursor.execute("SELECT * FROM emp_time WHERE agent_id = '{0}' AND end_time = '0000-00-00 00:00:00'".format(agent_id))
+    conds_3 = ['no_time', 'need_et']
+    decision = None
+    myresult = cursor.fetchone()
+    print("######################", myresult)
+    if not myresult:
+        print("[INFO] All Empty")
+        decision = conds_3[0]
+    else:
+        decision = conds_3[1]
+    connect.close()
+    return decision
 
 def read_db_by_date(from_date, to_date, agent_id, connect):
     cursor = connect.pointer()[0]
@@ -747,7 +875,7 @@ def read_db_time_by_date(from_date, to_date, agent_id, connect):
     for each in myresult:
         json_data = {}
         each = list(each)
-        # each.pop(0)
+        each.pop(0)
         for x,y in zip(keys, each):
             json_data[x] = y
         data.append(json_data)
@@ -790,18 +918,51 @@ def insert_db(data, connect):
     connect.close()
 
 def insert_db_time(data, connect):
-    keys = ""
-    vals = []
-    data['start_time'] = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
-    data['end_time'] = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
-    for key, val in data.items():
-        keys = keys + key + ", "
-        vals.append(val)
-    vals = tuple(vals)
-    sql = "INSERT INTO emp_time ({0}) VALUES (%s, %s, %s);".format(keys[:-2])
-    print("@@@@@@@@@@@@@", (sql, vals))
     cursor, db = connect.pointer()
+    start_time = datetime.strptime(data['start_time'], '%m/%d/%Y, %H:%M:%S %p')
+    sql0 = "SELECT  MAX(shift) FROM emp_time WHERE agent_id = '{0}'".format(data['agent_id'])
+    cursor.execute(sql0)
+    max_shift = cursor.fetchone()[0]
+    print("MAX SHIFT: ", max_shift)
+    if max_shift:
+        sql01 = "SELECT end_shift FROM emp_time WHERE agent_id = '{0}' AND shift = {1}".format(data['agent_id'], max_shift)
+        cursor.execute(sql01)
+        end_shift = cursor.fetchone()[0]
+        print("END SHIFT: ", end_shift)
+        if end_shift:
+            new_shift = max_shift + 1
+        else:
+            new_shift = max_shift
+    else:
+        new_shift = 1
+    sql = "INSERT INTO emp_time (start_time, end_time, agent_id, shift, end_shift) VALUES (%s, %s, %s, %s, %s);"
+    vals = (start_time, 0, data['agent_id'], new_shift, 0)
+    print("@@@@@@@@@@@@@", (sql, vals))
     cursor.execute(sql, vals)
+
+    db.commit()
+    connect.close()
+
+def update_end_time_db(data, connect):
+    end_time = datetime.strptime(data['end_time'], '%m/%d/%Y, %H:%M:%S %p')
+    agent_id = data['agent_id']
+    sql = "UPDATE emp_time SET end_time = '{0}' WHERE agent_id = '{1}' AND end_time='0000-00-00 00:00:00'".format(end_time, agent_id)
+    print("UPDATE END TIME: ", sql)
+    cursor, db = connect.pointer()
+    cursor.execute(sql)
+
+    db.commit()
+    connect.close()
+
+def update_end_shift_db(data, connect):
+    cursor, db = connect.pointer()
+    agent_id = data['agent_id']
+    sql0 = "SELECT  MAX(shift) FROM emp_time WHERE agent_id = '{0}'".format(data['agent_id'])
+    cursor.execute(sql0)
+    max_shift = cursor.fetchone()[0]
+    sql = "UPDATE emp_time SET end_shift = 1 WHERE agent_id = '{0}' AND shift = {1}".format(agent_id, max_shift)
+    print("UPDATE END SHIFT: ", sql)
+    cursor.execute(sql)
 
     db.commit()
     connect.close()
@@ -839,12 +1000,13 @@ def update_db(data, connect):
     db.commit()
     connect.close()
 
+
+
 if __name__ == "__main__":
     try:
-        # connect = Connect()
         app.run('0.0.0.0', debug=True)
     except Exception as e:
         print("[Exception] ", str(e))
 
     # connect = Connect()
-    # admin_profit_search_db({'sal_month': 'September', 'sal_year': '2021'}, connect)
+    # read_time_today_validation_db('sowais672@gmail.com', connect)

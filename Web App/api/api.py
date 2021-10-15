@@ -265,8 +265,10 @@ def admin_emp_salary_search_db(data, connect):
     print(sales)
     total_tarrif = []
     for each_sale in sales:
-        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[7]] if s.isdigit() or s=="."])
-        total_tarrif.append(float(each_sale_7))
+        each_sale_7 = "".join([str(s) for s in [x for x in each_sale[9]] if s.isdigit() or s=="."])
+        if each_sale_7:
+            print("EACH SALE: ", each_sale_7, type(each_sale_7))
+            total_tarrif.append(float(each_sale_7))
     print("Before sum: ", total_tarrif)
     total_tarrif = sum(total_tarrif)
     print("Total Sales: ", total_tarrif)
@@ -528,13 +530,15 @@ def admin_profit_search_db(data, connect):
     year = data['sal_year']
     # revenue = int(data['revenue'])
     ##
-    sqlR = "SELECT total_tariff FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
+    sqlR = "SELECT profit FROM emp_sales WHERE '{0}-{1}-01' <= timestamp AND timestamp < '{2}-{3}-01'".format(str(year), str(month), str(year), str(month+1))
     cursor.execute(sqlR)
     revenue = cursor.fetchall()
     print("revenues: ", revenue)
     rev = []
     for each in revenue:
-        rev.append("".join([str(s) for s in [x for x in each[0]] if s.isdigit() or s=="."]))
+        each_sale = "".join([str(s) for s in [x for x in each[0]] if s.isdigit() or s=="."])
+        if each_sale:
+            rev.append(each_sale)
     print("ind revs: ", rev)
     revenue = sum([float(x) for x in rev])
     revenue = float("{:.2f}".format(revenue))

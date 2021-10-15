@@ -595,7 +595,7 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="validationCustom02">Profit</label>
-                                                <input type="text" name="profit" class="form-control" id="validationCustom02" placeholder="Profit" required>
+                                                <input type="text" name="profit" class="form-control" id="profit" placeholder="Profit" required>
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -717,7 +717,7 @@
                                         write_xhr = new XMLHttpRequest();
                                         var agent_id = sessionStorage.getItem("agent_id");
                                         formDataWrite.append("agent_id", agent_id);
-                                        var names = ['timestamp', 'agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'profit', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link']
+                                        var names = ['timestamp', 'agent_name', 'order_id', 'client_name', 'contact', 'email_id', 'deposit', 'total_tariff', 'driver_pay', 'payment_method', 'no_of_vehicles', 'pickup', 'booking_status', 'agreement', 'agent_notes', 'jt_link']
                                         for(var each_name = 0; each_name < names.length; each_name++){
                                             if(e.target[names[each_name]].value){
                                                 formDataWrite.append(names[each_name], e.target[names[each_name]].value)
@@ -729,10 +729,10 @@
                                         }
                                         
                                         cutt_offs = {"Zelle" : 0, "CashApp": 2.75, "Venmo": 2, "Paypal": 3.5}
-                                        var total_tariff_val = document.getElementById('total_tariff').value;
+                                        var total_tariff_val = document.getElementById('profit').value;
                                         if (isNaN(total_tariff_val)) 
                                         {
-                                            alert("Total Tariff must be numbers only.");
+                                            alert("Profit must be numbers only.");
                                         }
                                         else{
                                             //
@@ -746,7 +746,7 @@
                                             total_tariff_val = total_tariff_val - (total_tariff_val * (cutt_offs[payment_method_val]/100))
                                         }
                                         console.log("TOT TAR: ", total_tariff_val);
-                                        formDataWrite.append("total_tariff", total_tariff_val);
+                                        formDataWrite.append("profit", total_tariff_val);
 
                                         var pickup_date_val= e.target.pickup_date.value;
                                         pickup_date_val = new Date(pickup_date_val).toLocaleString();
